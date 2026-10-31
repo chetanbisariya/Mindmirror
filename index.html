@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMirror — Psychological Problem Screener & Personality Discovery</title>
+  <meta name="description" content="Discover what emotional challenges you are facing, receive actionable science-backed coping blueprints, and uncover your unique personality archetype.">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+</head>
+<body>
+  <!-- Ambient Glow Background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="nav-content">
+      <div class="brand-link" id="nav-brand" role="button" tabindex="0">
+        <div class="brand-icon">🪞</div>
+        <div class="brand-text">
+          <h1>MindMirror</h1>
+          <p>Psychological Insight & Wellness</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-btn active" data-view="home">🏠 Home</button>
+        <button class="nav-btn" data-view="screener">🌪️ Problem Screener</button>
+        <button class="nav-btn" data-view="personality">🎭 Personality Test</button>
+        <button class="nav-btn" data-view="breath">🫁 Breath Gym</button>
+        <button class="nav-btn" data-view="cbt">📝 CBT De-Tangler</button>
+        <button class="nav-btn" data-view="crisis">🆘 Helpline</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+    
+    <!-- ==========================================
+         VIEW 1: HOME / HUB
+         ========================================== -->
+    <section id="view-home" class="view-panel">
+      <div class="hero-section">
+        <div class="hero-badge">
+          <span>✨</span> Evidence-Informed Self-Discovery & Emotional Care
+        </div>
+        <h2 class="hero-title">
+          Understand What You're Feeling.<br>
+          <span class="gradient">Discover Who You Are.</span>
+        </h2>
+        <p class="hero-subtitle">
+          Feeling overwhelmed, stuck, or anxious? Take a compassionate, clinical-grade assessment to pinpoint the exact emotional challenges you're facing, get tailored step-by-step blueprints to feel better, and uncover your core psychological archetype.
+        </p>
+
+        <!-- Mode Grid Cards -->
+        <div class="mode-grid">
+          <!-- Card 1: Problem Screener -->
+          <div class="mode-card">
+            <div class="mode-icon">🧠</div>
+            <h3>Emotional Problem Screener</h3>
+            <p>Diagnose what's creating mental friction — whether it's anxiety, burnout, depressive fog, stress, sleep disruption, or boundary fatigue.</p>
+            <ul class="mode-features">
+              <li>12 clinically-informed screening questions</li>
+              <li>Severity score & primary challenge diagnosis</li>
+              <li>3-tier coping blueprint: 0-5m rescue, 7-day habits, CBT reframes</li>
+            </ul>
+            <button class="btn btn-primary" id="btn-start-problem">
+              Start Problem Screener &rarr;
+            </button>
+          </div>
+
+          <!-- Card 2: Full Deep-Dive (Featured) -->
+          <div class="mode-card featured">
+            <div class="mode-card-badge">Most Insightful</div>
+            <div class="mode-icon">✨</div>
+            <h3>Complete Mind & Personality Deep-Dive</h3>
+            <p>The ultimate holistic self-reflection. Screens your current emotional struggles AND assesses your personality archetype to reveal how they interact.</p>
+            <ul class="mode-features">
+              <li>Both assessments in one seamless flow (5 mins)</li>
+              <li>Cross-synthesis: "How your personality reacts to stress"</li>
+              <li>Full downloadable & printable wellness report</li>
+            </ul>
+            <button class="btn btn-primary btn-lg" id="btn-start-full">
+              Begin Complete Journey &rarr;
+            </button>
+          </div>
+
+          <!-- Card 3: Personality Archetype -->
+          <div class="mode-card">
+            <div class="mode-icon">🎭</div>
+            <h3>Personality Archetype Compass</h3>
+            <p>Explore your cognitive wiring across energy, perception, decisions, and lifestyle. Discover which of the 8 psychological archetypes you embody.</p>
+            <ul class="mode-features">
+              <li>8 insightful trait questions</li>
+              <li>Superpowers, blind spots, & shadow tendencies</li>
+              <li>Optimal mental recharge styles</li>
+            </ul>
+            <button class="btn btn-primary" id="btn-start-personality">
+              Explore Personality &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Interactive Tools Section -->
+        <div style="margin-top: 1rem; text-align: left;">
+          <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">Need Immediate Relief Right Now?</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">You don't have to take a test to start soothing your nervous system. Try our built-in interactive tools:</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="quick-tool-breath">
+              🫁 <strong>Interactive Breath Pacer</strong> (Calm vagus nerve in 2 mins)
+            </button>
+            <button class="btn btn-secondary" id="quick-tool-cbt">
+              📝 <strong>CBT Thought De-Tangler</strong> (Reframe anxious thoughts)
+            </button>
+          </div>
+        </div>
+
+        <!-- Safety Banner -->
+        <div class="safety-banner">
+          <div class="safety-icon">🛡️</div>
+          <div class="safety-text">
+            <h4>Compassionate, Safe & 100% Private</h4>
+            <p>
+              Your answers never leave your browser — zero tracking, zero cloud data storage. This web app is an educational self-reflection companion based on CBT and psychology concepts. It does not replace medical or clinical psychiatric diagnosis. If you are in crisis, please check our <a class="safety-link" id="link-crisis-banner">Emergency Resources & Helplines</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: ASSESSMENT WIZARD
+         ========================================== -->
+    <section id="view-assessment" class="view-panel" style="display: none;">
+      <div class="assessment-container">
+        
+        <div class="assessment-header">
+          <div class="assessment-badge" id="wizard-badge">Problem Screener</div>
+          <div class="assessment-progress-wrapper">
+            <div class="progress-meta">
+              <span id="wizard-step-label">Question 1 of 12</span>
+              <span id="wizard-percent-label">8% Complete</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="wizard-progress-bar" style="width: 8%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Body -->
+        <div class="question-card" id="wizard-question-content">
+          <h3 class="question-title" id="wizard-q-title">Loading Question...</h3>
+          <p class="question-subtext" id="wizard-q-subtext">Please select the option that best reflects your recent experience.</p>
+
+          <div class="options-stack" id="wizard-options-container">
+            <!-- Dynamically populated options -->
+          </div>
+        </div>
+
+        <!-- Wizard Nav Actions -->
+        <div class="assessment-nav">
+          <button class="btn btn-secondary" id="wizard-prev-btn" disabled>
+            &larr; Previous
+          </button>
+          <div style="font-size: 0.82rem; color: var(--text-muted); display: none;" id="keyboard-hint">
+            Tip: Press 1-4 on your keyboard to choose
+          </div>
+          <button class="btn btn-primary" id="wizard-next-btn" disabled>
+            Next &rarr;
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: RESULTS DASHBOARD
+         ========================================== -->
+    <section id="view-results" class="view-panel" style="display: none;">
+      <div class="results-dashboard" id="results-content-area">
+        <!-- Dynamically populated by app.js -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: BREATHWORK GYM
+         ========================================== -->
+    <section id="view-breath" class="view-panel" style="display: none;">
+      <div class="breath-gym-container">
+        <h2 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem;">Interactive Breath Pacer</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Control your autonomic nervous system in real-time. Follow the expanding and contracting rhythm.
+        </p>
+
+        <!-- Mode Tabs -->
+        <div class="mode-selector-tabs">
+          <button class="tab-btn active" data-breath-mode="box">Box Breathing (4-4-4-4)</button>
+          <button class="tab-btn" data-breath-mode="478">4-7-8 Relaxing Sleep Breath</button>
+          <button class="tab-btn" data-breath-mode="sigh">Physiological Sigh (Vagal Reset)</button>
+        </div>
+
+        <!-- Canvas Animation Container -->
+        <div class="canvas-wrapper">
+          <canvas id="breath-canvas" width="260" height="260"></canvas>
+        </div>
+
+        <!-- Text Instruction -->
+        <div class="pacer-instruction" id="pacer-instruction">
+          Click "Begin Breathing" to calm your nervous system
+        </div>
+
+        <!-- Metrics -->
+        <div class="pacer-metrics">
+          <div>
+            <div class="metric-val" id="pacer-timer">00:00</div>
+            <div>Elapsed Time</div>
+          </div>
+          <div>
+            <div class="metric-val" id="pacer-cycles">0</div>
+            <div>Cycles Completed</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="pacer-controls">
+          <button class="btn btn-primary btn-lg" id="btn-pacer-toggle">
+            ▶ Begin Breathing
+          </button>
+          <button class="btn btn-secondary" id="btn-pacer-reset">
+            ↺ Reset
+          </button>
+          <button class="btn btn-secondary" id="btn-pacer-sound">
+            🔔 Sound: Off
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 5: CBT THOUGHT DE-TANGLER
+         ========================================== -->
+    <section id="view-cbt" class="view-panel" style="display: none;">
+      <div class="cbt-container">
+        <div style="margin-bottom: 1.75rem;">
+          <h2 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem;">CBT Thought De-Tangler</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            Cognitive Behavioral Therapy (CBT) shows that feelings follow thoughts. Detangle distorted automatic thoughts and replace them with objective, balanced truth.
+          </p>
+        </div>
+
+        <!-- Preloaded Examples -->
+        <div style="background: var(--bg-tertiary); padding: 1rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+            Or Explore a Common Scenario:
+          </label>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="cbt-examples-pills">
+            <!-- Example buttons populated in JS -->
+          </div>
+        </div>
+
+        <!-- Step 1: Troubling Thought -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>1️⃣</span> What is the troubling or negative thought running through your head?
+          </div>
+          <textarea class="cbt-input" id="cbt-input-thought" placeholder="e.g., 'If I don't get this promotion, I'm a complete failure and everyone will look down on me...'"></textarea>
+        </div>
+
+        <!-- Step 2: Identify Distortion -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>2️⃣</span> Select any cognitive traps (distortions) present in this thought:
+          </div>
+          <div class="distortions-chips-grid" id="cbt-distortions-container">
+            <!-- Populated from cbt-tool.js -->
+          </div>
+        </div>
+
+        <!-- Step 3: Deconstruction -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>3️⃣</span> Objective Reality Check:
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">What is concrete, verifiable factual evidence AGAINST this thought?</label>
+              <textarea class="cbt-input" id="cbt-input-evidence" style="min-height: 60px;" placeholder="e.g., 'I have received positive performance feedback for 3 consecutive quarters...'"></textarea>
+            </div>
+            <div>
+              <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">What would you compassionately tell your best friend if they thought this?</label>
+              <textarea class="cbt-input" id="cbt-input-friend" style="min-height: 60px;" placeholder="e.g., 'One job title does not determine your human worth or competence...'"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="btn-generate-reframe" style="width: 100%;">
+          ⚡ Synthesize Balanced Perspective
+        </button>
+
+        <!-- Output Box -->
+        <div class="cbt-output-box" id="cbt-output-box" style="display: none;">
+          <h4>🌱 Your Balanced, Grounded Perspective</h4>
+          <p class="cbt-reframed-text" id="cbt-reframed-text"></p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" id="btn-copy-reframe">📋 Copy Reframe</button>
+            <button class="btn btn-secondary btn-sm" id="btn-clear-cbt">Clear & Start New</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 6: CRISIS SUPPORT & HELPLINES
+         ========================================== -->
+    <section id="view-crisis" class="view-panel" style="display: none;">
+      <div class="resources-container">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🆘</div>
+          <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">Emergency & Crisis Support</h2>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            If you or someone you know is going through a severe crisis, experiencing suicidal ideation, or in acute danger, please know that you are not alone. Free, confidential support is available 24/7.
+          </p>
+        </div>
+
+        <div class="crisis-grid" id="crisis-list-container">
+          <!-- Populated from cbt-tool.js -->
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+          <button class="btn btn-primary" data-view="home">
+            &larr; Return to Home
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+        <span>🪞</span> MindMirror Psychological Compass
+      </div>
+      <p class="footer-disclaimer">
+        Disclaimer: MindMirror is an educational and self-reflection web application created to facilitate psychological awareness and self-discovery. It does not provide medical diagnosis, psychotherapy, or psychiatric clinical care.
+      </p>
+      <div class="footer-links">
+        <a data-view="home">Home</a>
+        <a data-view="screener">Emotional Screener</a>
+        <a data-view="personality">Personality Compass</a>
+        <a data-view="breath">Breath Gym</a>
+        <a data-view="cbt">CBT Tool</a>
+        <a data-view="crisis">Crisis Lifelines</a>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+        &copy; MindMirror Project — Created for Compassionate Human Flourishing.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/questions.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/breath-pacer.js"></script>
+  <script src="js/cbt-tool.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

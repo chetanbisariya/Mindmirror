@@ -1,0 +1,4265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMirror — Psychological Problem Screener & Personality Discovery</title>
+  <meta name="description" content="Discover what emotional challenges you are facing, receive actionable science-backed coping blueprints, and uncover your unique personality archetype.">
+  
+  <style>
+/* MindMirror - Core Styling & Design System */
+
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --border-color: #e2e8f0;
+  --border-focus: #6366f1;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --primary-glow: rgba(79, 70, 229, 0.25);
+
+  --accent-teal: #0d9488;
+  --accent-rose: #e11d48;
+  --accent-amber: #d97706;
+  --accent-emerald: #059669;
+  --accent-violet: #7c3aed;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2937;
+  --bg-card: #141c2e;
+  --bg-card-hover: #1e293b;
+  --border-color: #243048;
+  --border-focus: #818cf8;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0b0f19;
+
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-light: rgba(99, 102, 241, 0.15);
+  --primary-glow: rgba(99, 102, 241, 0.35);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background Ambient Orbs */
+.ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.18;
+  animation: floatOrb 20s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--primary);
+  top: -150px;
+  left: -100px;
+}
+
+.orb-2 {
+  width: 450px;
+  height: 450px;
+  background: var(--accent-teal);
+  bottom: -100px;
+  right: -50px;
+  animation-duration: 25s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: var(--accent-violet);
+  top: 40%;
+  right: 15%;
+  animation-duration: 18s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(40px) scale(1.08); }
+  100% { transform: translateY(-30px) scale(0.95); }
+}
+
+/* Layout */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  width: 100%;
+  flex: 1;
+}
+
+/* Navigation Header */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+[data-theme="dark"] .main-header {
+  background: rgba(11, 15, 25, 0.85);
+}
+
+.nav-content {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-violet));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.35rem;
+  box-shadow: 0 4px 10px var(--primary-glow);
+}
+
+.brand-text h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-text p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--border-color);
+  transform: rotate(15deg);
+}
+
+/* Base Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: #ffffff;
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--text-muted);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
+}
+
+.btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 0.9rem 1.8rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  padding: 3.5rem 1rem 2.5rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+}
+
+.hero-title span.gradient {
+  background: linear-gradient(135deg, var(--primary), #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+/* Mode Selection Cards */
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.mode-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-focus);
+}
+
+.mode-card.featured {
+  border-color: var(--primary);
+  background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg-card) 60%);
+}
+
+.mode-card-badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: #fff;
+}
+
+.mode-icon {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.mode-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.mode-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  flex: 1;
+}
+
+.mode-features {
+  list-style: none;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mode-features li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mode-features li::before {
+  content: "✓";
+  color: var(--accent-emerald);
+  font-weight: bold;
+}
+
+/* Safety & Medical Disclaimer Banner */
+.safety-banner {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent-amber);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.safety-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.safety-text h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.safety-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.safety-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Footer */
+.main-footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-disclaimer {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  max-width: 700px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .nav-content {
+    flex-wrap: wrap;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-top: 0.5rem;
+  }
+  .mode-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-section {
+    padding: 2rem 0.5rem 1.5rem;
+  }
+}
+
+
+/* MindMirror - Component Styles */
+
+/* Assessment Container */
+.assessment-container {
+  max-width: 780px;
+  margin: 1.5rem auto 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.assessment-header {
+  margin-bottom: 2rem;
+}
+
+.assessment-progress-wrapper {
+  margin-bottom: 1.25rem;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent-violet));
+  border-radius: var(--radius-full);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.assessment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+/* Question Content */
+.question-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.question-subtext {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+}
+
+/* Options Stack */
+.options-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 2.25rem;
+}
+
+.option-btn {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  outline: none;
+}
+
+.option-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary);
+  transform: translateX(3px);
+}
+
+.option-btn.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.option-bullet {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  margin-top: 2px;
+}
+
+.option-btn.selected .option-bullet {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.option-text {
+  flex: 1;
+}
+
+/* Assessment Navigation Bar */
+.assessment-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
+
+/* ========================================================
+   RESULTS DASHBOARD
+   ======================================================== */
+.results-dashboard {
+  max-width: 960px;
+  margin: 1.5rem auto 4rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.results-header-banner {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.results-header-text h2 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.results-header-text p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 580px;
+}
+
+.results-actions-top {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Overview Cards Grid */
+.overview-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.stat-card-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.stat-card-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.severity-pill {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.severity-low {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-emerald);
+}
+
+.severity-medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+}
+
+.severity-high {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--accent-rose);
+}
+
+.stat-card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Dimension Breakdown Bars */
+.dimensions-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+}
+
+.dimension-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.dimension-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dimension-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.dimension-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dimension-percentage {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dimension-bar-track {
+  width: 100%;
+  height: 10px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.dimension-bar-value {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease-out;
+}
+
+/* Primary Problem Blueprint & Action Plan */
+.blueprint-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-top: 4px solid var(--primary);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.blueprint-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.blueprint-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.blueprint-header-text h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.blueprint-header-text p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.neurology-box {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 2rem;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-left: 3px solid var(--primary);
+}
+
+.neurology-box strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+/* Tiered Solution Blueprint */
+.solution-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tier-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  transition: border-color var(--transition-fast);
+}
+
+.tier-item:hover {
+  border-color: var(--primary);
+}
+
+.tier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.tier-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+}
+
+.tier-1 .tier-tag { background: rgba(239, 68, 68, 0.15); color: var(--accent-rose); }
+.tier-2 .tier-tag { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+.tier-3 .tier-tag { background: rgba(79, 70, 229, 0.15); color: var(--primary); }
+
+.tier-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.tier-steps {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.habit-card {
+  background: var(--bg-tertiary);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.habit-card strong {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.cbt-preview-box {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+.cbt-row {
+  margin-bottom: 0.5rem;
+}
+
+.cbt-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.cbt-val {
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.mantra-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+  border: 1px dashed var(--accent-emerald);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.mantra-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-emerald);
+  margin-bottom: 0.35rem;
+}
+
+.mantra-quote {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+/* Personality Archetype Card */
+.archetype-showcase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.archetype-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.75rem;
+}
+
+.archetype-big-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-violet));
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.75rem;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px var(--primary-glow);
+}
+
+.archetype-titles h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.archetype-tagline {
+  font-size: 0.95rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.archetype-summary {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+}
+
+.archetype-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.trait-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+}
+
+.trait-box h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.trait-list {
+  list-style: none;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.trait-list li::before {
+  content: "•";
+  color: var(--primary);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+}
+
+/* Personality & Distress Cross-Synthesis */
+.cross-synthesis-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(236, 72, 153, 0.08));
+  border: 1.5px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.cross-synthesis-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cross-synthesis-card p {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ========================================================
+   BREATHWORK GYM
+   ======================================================== */
+.breath-gym-container {
+  max-width: 680px;
+  margin: 1.5rem auto 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.mode-selector-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.canvas-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto 1.5rem;
+}
+
+.pacer-instruction {
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.countdown-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+}
+
+.pacer-metrics {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.metric-val {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pacer-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ========================================================
+   CBT THOUGHT DETANGLER
+   ======================================================== */
+.cbt-container {
+  max-width: 820px;
+  margin: 1.5rem auto 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.cbt-step {
+  margin-bottom: 2rem;
+}
+
+.cbt-step-header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cbt-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color var(--transition-fast);
+}
+
+.cbt-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.distortions-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.chip-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.chip-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary);
+}
+
+.chip-btn.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.cbt-output-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(79, 70, 229, 0.08));
+  border: 1.5px solid var(--accent-emerald);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-top: 2rem;
+  animation: fadeIn 0.35s ease-out;
+}
+
+.cbt-output-box h4 {
+  color: var(--accent-emerald);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cbt-reframed-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+}
+
+/* ========================================================
+   CRISIS & RESOURCES MODAL / SECTION
+   ======================================================== */
+.resources-container {
+  max-width: 820px;
+  margin: 1.5rem auto 3rem;
+}
+
+.crisis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.crisis-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.crisis-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-rose);
+  background: rgba(239, 68, 68, 0.12);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.crisis-country {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.crisis-contact {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0.75rem 0;
+}
+
+/* Print Styles */
+@media print {
+  .main-header, .main-footer, .results-actions-top, .ambient-bg, .safety-banner {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .results-dashboard {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+</style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+</head>
+<body>
+  <!-- Ambient Glow Background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="nav-content">
+      <div class="brand-link" id="nav-brand" role="button" tabindex="0">
+        <div class="brand-icon">🪞</div>
+        <div class="brand-text">
+          <h1>MindMirror</h1>
+          <p>Psychological Insight & Wellness</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-btn active" data-view="home">🏠 Home</button>
+        <button class="nav-btn" data-view="screener">🌪️ Problem Screener</button>
+        <button class="nav-btn" data-view="personality">🎭 Personality Test</button>
+        <button class="nav-btn" data-view="breath">🫁 Breath Gym</button>
+        <button class="nav-btn" data-view="cbt">📝 CBT De-Tangler</button>
+        <button class="nav-btn" data-view="crisis">🆘 Helpline</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+    
+    <!-- ==========================================
+         VIEW 1: HOME / HUB
+         ========================================== -->
+    <section id="view-home" class="view-panel">
+      <div class="hero-section">
+        <div class="hero-badge">
+          <span>✨</span> Evidence-Informed Self-Discovery & Emotional Care
+        </div>
+        <h2 class="hero-title">
+          Understand What You're Feeling.<br>
+          <span class="gradient">Discover Who You Are.</span>
+        </h2>
+        <p class="hero-subtitle">
+          Feeling overwhelmed, stuck, or anxious? Take a compassionate, clinical-grade assessment to pinpoint the exact emotional challenges you're facing, get tailored step-by-step blueprints to feel better, and uncover your core psychological archetype.
+        </p>
+
+        <!-- Mode Grid Cards -->
+        <div class="mode-grid">
+          <!-- Card 1: Problem Screener -->
+          <div class="mode-card">
+            <div class="mode-icon">🧠</div>
+            <h3>Emotional Problem Screener</h3>
+            <p>Diagnose what's creating mental friction — whether it's anxiety, burnout, depressive fog, stress, sleep disruption, or boundary fatigue.</p>
+            <ul class="mode-features">
+              <li>12 clinically-informed screening questions</li>
+              <li>Severity score & primary challenge diagnosis</li>
+              <li>3-tier coping blueprint: 0-5m rescue, 7-day habits, CBT reframes</li>
+            </ul>
+            <button class="btn btn-primary" id="btn-start-problem">
+              Start Problem Screener &rarr;
+            </button>
+          </div>
+
+          <!-- Card 2: Full Deep-Dive (Featured) -->
+          <div class="mode-card featured">
+            <div class="mode-card-badge">Most Insightful</div>
+            <div class="mode-icon">✨</div>
+            <h3>Complete Mind & Personality Deep-Dive</h3>
+            <p>The ultimate holistic self-reflection. Screens your current emotional struggles AND assesses your personality archetype to reveal how they interact.</p>
+            <ul class="mode-features">
+              <li>Both assessments in one seamless flow (5 mins)</li>
+              <li>Cross-synthesis: "How your personality reacts to stress"</li>
+              <li>Full downloadable & printable wellness report</li>
+            </ul>
+            <button class="btn btn-primary btn-lg" id="btn-start-full">
+              Begin Complete Journey &rarr;
+            </button>
+          </div>
+
+          <!-- Card 3: Personality Archetype -->
+          <div class="mode-card">
+            <div class="mode-icon">🎭</div>
+            <h3>Personality Archetype Compass</h3>
+            <p>Explore your cognitive wiring across energy, perception, decisions, and lifestyle. Discover which of the 8 psychological archetypes you embody.</p>
+            <ul class="mode-features">
+              <li>8 insightful trait questions</li>
+              <li>Superpowers, blind spots, & shadow tendencies</li>
+              <li>Optimal mental recharge styles</li>
+            </ul>
+            <button class="btn btn-primary" id="btn-start-personality">
+              Explore Personality &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Interactive Tools Section -->
+        <div style="margin-top: 1rem; text-align: left;">
+          <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">Need Immediate Relief Right Now?</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">You don't have to take a test to start soothing your nervous system. Try our built-in interactive tools:</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="quick-tool-breath">
+              🫁 <strong>Interactive Breath Pacer</strong> (Calm vagus nerve in 2 mins)
+            </button>
+            <button class="btn btn-secondary" id="quick-tool-cbt">
+              📝 <strong>CBT Thought De-Tangler</strong> (Reframe anxious thoughts)
+            </button>
+          </div>
+        </div>
+
+        <!-- Safety Banner -->
+        <div class="safety-banner">
+          <div class="safety-icon">🛡️</div>
+          <div class="safety-text">
+            <h4>Compassionate, Safe & 100% Private</h4>
+            <p>
+              Your answers never leave your browser — zero tracking, zero cloud data storage. This web app is an educational self-reflection companion based on CBT and psychology concepts. It does not replace medical or clinical psychiatric diagnosis. If you are in crisis, please check our <a class="safety-link" id="link-crisis-banner">Emergency Resources & Helplines</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: ASSESSMENT WIZARD
+         ========================================== -->
+    <section id="view-assessment" class="view-panel" style="display: none;">
+      <div class="assessment-container">
+        
+        <div class="assessment-header">
+          <div class="assessment-badge" id="wizard-badge">Problem Screener</div>
+          <div class="assessment-progress-wrapper">
+            <div class="progress-meta">
+              <span id="wizard-step-label">Question 1 of 12</span>
+              <span id="wizard-percent-label">8% Complete</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="wizard-progress-bar" style="width: 8%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Body -->
+        <div class="question-card" id="wizard-question-content">
+          <h3 class="question-title" id="wizard-q-title">Loading Question...</h3>
+          <p class="question-subtext" id="wizard-q-subtext">Please select the option that best reflects your recent experience.</p>
+
+          <div class="options-stack" id="wizard-options-container">
+            <!-- Dynamically populated options -->
+          </div>
+        </div>
+
+        <!-- Wizard Nav Actions -->
+        <div class="assessment-nav">
+          <button class="btn btn-secondary" id="wizard-prev-btn" disabled>
+            &larr; Previous
+          </button>
+          <div style="font-size: 0.82rem; color: var(--text-muted); display: none;" id="keyboard-hint">
+            Tip: Press 1-4 on your keyboard to choose
+          </div>
+          <button class="btn btn-primary" id="wizard-next-btn" disabled>
+            Next &rarr;
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: RESULTS DASHBOARD
+         ========================================== -->
+    <section id="view-results" class="view-panel" style="display: none;">
+      <div class="results-dashboard" id="results-content-area">
+        <!-- Dynamically populated by app.js -->
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: BREATHWORK GYM
+         ========================================== -->
+    <section id="view-breath" class="view-panel" style="display: none;">
+      <div class="breath-gym-container">
+        <h2 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem;">Interactive Breath Pacer</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Control your autonomic nervous system in real-time. Follow the expanding and contracting rhythm.
+        </p>
+
+        <!-- Mode Tabs -->
+        <div class="mode-selector-tabs">
+          <button class="tab-btn active" data-breath-mode="box">Box Breathing (4-4-4-4)</button>
+          <button class="tab-btn" data-breath-mode="478">4-7-8 Relaxing Sleep Breath</button>
+          <button class="tab-btn" data-breath-mode="sigh">Physiological Sigh (Vagal Reset)</button>
+        </div>
+
+        <!-- Canvas Animation Container -->
+        <div class="canvas-wrapper">
+          <canvas id="breath-canvas" width="260" height="260"></canvas>
+        </div>
+
+        <!-- Text Instruction -->
+        <div class="pacer-instruction" id="pacer-instruction">
+          Click "Begin Breathing" to calm your nervous system
+        </div>
+
+        <!-- Metrics -->
+        <div class="pacer-metrics">
+          <div>
+            <div class="metric-val" id="pacer-timer">00:00</div>
+            <div>Elapsed Time</div>
+          </div>
+          <div>
+            <div class="metric-val" id="pacer-cycles">0</div>
+            <div>Cycles Completed</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="pacer-controls">
+          <button class="btn btn-primary btn-lg" id="btn-pacer-toggle">
+            ▶ Begin Breathing
+          </button>
+          <button class="btn btn-secondary" id="btn-pacer-reset">
+            ↺ Reset
+          </button>
+          <button class="btn btn-secondary" id="btn-pacer-sound">
+            🔔 Sound: Off
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 5: CBT THOUGHT DE-TANGLER
+         ========================================== -->
+    <section id="view-cbt" class="view-panel" style="display: none;">
+      <div class="cbt-container">
+        <div style="margin-bottom: 1.75rem;">
+          <h2 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem;">CBT Thought De-Tangler</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            Cognitive Behavioral Therapy (CBT) shows that feelings follow thoughts. Detangle distorted automatic thoughts and replace them with objective, balanced truth.
+          </p>
+        </div>
+
+        <!-- Preloaded Examples -->
+        <div style="background: var(--bg-tertiary); padding: 1rem 1.25rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+            Or Explore a Common Scenario:
+          </label>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="cbt-examples-pills">
+            <!-- Example buttons populated in JS -->
+          </div>
+        </div>
+
+        <!-- Step 1: Troubling Thought -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>1️⃣</span> What is the troubling or negative thought running through your head?
+          </div>
+          <textarea class="cbt-input" id="cbt-input-thought" placeholder="e.g., 'If I don't get this promotion, I'm a complete failure and everyone will look down on me...'"></textarea>
+        </div>
+
+        <!-- Step 2: Identify Distortion -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>2️⃣</span> Select any cognitive traps (distortions) present in this thought:
+          </div>
+          <div class="distortions-chips-grid" id="cbt-distortions-container">
+            <!-- Populated from cbt-tool.js -->
+          </div>
+        </div>
+
+        <!-- Step 3: Deconstruction -->
+        <div class="cbt-step">
+          <div class="cbt-step-header">
+            <span>3️⃣</span> Objective Reality Check:
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+              <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">What is concrete, verifiable factual evidence AGAINST this thought?</label>
+              <textarea class="cbt-input" id="cbt-input-evidence" style="min-height: 60px;" placeholder="e.g., 'I have received positive performance feedback for 3 consecutive quarters...'"></textarea>
+            </div>
+            <div>
+              <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.35rem;">What would you compassionately tell your best friend if they thought this?</label>
+              <textarea class="cbt-input" id="cbt-input-friend" style="min-height: 60px;" placeholder="e.g., 'One job title does not determine your human worth or competence...'"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="btn-generate-reframe" style="width: 100%;">
+          ⚡ Synthesize Balanced Perspective
+        </button>
+
+        <!-- Output Box -->
+        <div class="cbt-output-box" id="cbt-output-box" style="display: none;">
+          <h4>🌱 Your Balanced, Grounded Perspective</h4>
+          <p class="cbt-reframed-text" id="cbt-reframed-text"></p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" id="btn-copy-reframe">📋 Copy Reframe</button>
+            <button class="btn btn-secondary btn-sm" id="btn-clear-cbt">Clear & Start New</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 6: CRISIS SUPPORT & HELPLINES
+         ========================================== -->
+    <section id="view-crisis" class="view-panel" style="display: none;">
+      <div class="resources-container">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🆘</div>
+          <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">Emergency & Crisis Support</h2>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            If you or someone you know is going through a severe crisis, experiencing suicidal ideation, or in acute danger, please know that you are not alone. Free, confidential support is available 24/7.
+          </p>
+        </div>
+
+        <div class="crisis-grid" id="crisis-list-container">
+          <!-- Populated from cbt-tool.js -->
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+          <button class="btn btn-primary" data-view="home">
+            &larr; Return to Home
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+        <span>🪞</span> MindMirror Psychological Compass
+      </div>
+      <p class="footer-disclaimer">
+        Disclaimer: MindMirror is an educational and self-reflection web application created to facilitate psychological awareness and self-discovery. It does not provide medical diagnosis, psychotherapy, or psychiatric clinical care.
+      </p>
+      <div class="footer-links">
+        <a data-view="home">Home</a>
+        <a data-view="screener">Emotional Screener</a>
+        <a data-view="personality">Personality Compass</a>
+        <a data-view="breath">Breath Gym</a>
+        <a data-view="cbt">CBT Tool</a>
+        <a data-view="crisis">Crisis Lifelines</a>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+        &copy; MindMirror Project — Created for Compassionate Human Flourishing.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  
+<script>
+/**
+ * MindMirror - Question Datasets
+ * 1. Problem Assessment (Emotional Distress & Psychological Screener)
+ * 2. Personality Archetype Assessment
+ */
+
+const PROBLEM_CATEGORIES = {
+  anxiety: {
+    id: 'anxiety',
+    name: 'Anxiety & Overthinking',
+    icon: '🌪️',
+    color: '#6366f1',
+    description: 'Mental loops, anticipatory worry, somatic tension, and difficulty calming the nervous system.'
+  },
+  burnout: {
+    id: 'burnout',
+    name: 'Burnout & Emotional Exhaustion',
+    icon: '🔋',
+    color: '#f97316',
+    description: 'Chronic mental depletion, emotional numbness, loss of motivation, and feeling drained despite rest.'
+  },
+  depression: {
+    id: 'depression',
+    name: 'Depressive Fog & Low Vitality',
+    icon: '🌧️',
+    color: '#0284c7',
+    description: 'Persistent heaviness, loss of pleasure in usual activities, low energy, and critical self-talk.'
+  },
+  stress: {
+    id: 'stress',
+    name: 'Acute Stress & Overwhelm',
+    icon: '⚡',
+    color: '#ef4444',
+    description: 'Feeling unable to cope with accumulating life demands, sensory overload, and emotional irritability.'
+  },
+  sleep: {
+    id: 'sleep',
+    name: 'Sleep & Somatic Disturbance',
+    icon: '🌙',
+    color: '#8b5cf6',
+    description: 'Racing mind at night, interrupted sleep, waking up unrefreshed, and daytime cognitive fatigue.'
+  },
+  imposter: {
+    id: 'imposter',
+    name: 'Imposter Syndrome & Self-Doubt',
+    icon: '🪞',
+    color: '#ec4899',
+    description: 'Chronic fear of being exposed as incompetent, perfectionistic paralysis, and discounting personal achievements.'
+  },
+  boundaries: {
+    id: 'boundaries',
+    name: 'People-Pleasing & Boundary Fatigue',
+    icon: '🛡️',
+    color: '#10b981',
+    description: 'Difficulty saying no, absorbing other people\'s emotional baggage, conflict avoidance, and resentment.'
+  }
+};
+
+const PROBLEM_QUESTIONS = [
+  // Anxiety & Overthinking
+  {
+    id: 'p1',
+    category: 'anxiety',
+    question: 'How often do you find your mind trapped in repetitive "what if" scenarios, dreading potential future problems?',
+    subtext: 'Consider your baseline over the past 2–4 weeks.',
+    options: [
+      { text: 'Rarely or Never — My mind stays relatively present.', score: 0 },
+      { text: 'Occasionally — Usually before high-stakes events.', score: 1 },
+      { text: 'Frequently — I spend hours replaying worries.', score: 2 },
+      { text: 'Almost Constantly — It feels like an unstoppable mental loop.', score: 3 }
+    ]
+  },
+  {
+    id: 'p2',
+    category: 'anxiety',
+    question: 'Do you experience physical sensations of anxiety (e.g., tight chest, shallow breathing, clenched jaw, restlessness)?',
+    subtext: 'Your body often registers anxiety before your conscious mind does.',
+    options: [
+      { text: 'Almost never — My body generally feels calm and relaxed.', score: 0 },
+      { text: 'Mildly — Only when actively dealing with acute deadlines.', score: 1 },
+      { text: 'Noticeably — Muscle tension or racing heart occurs several days a week.', score: 2 },
+      { text: 'Severely — Constant physical tightness, stomach knots, or jitters.', score: 3 }
+    ]
+  },
+  // Burnout & Emotional Exhaustion
+  {
+    id: 'p3',
+    category: 'burnout',
+    question: 'When you wake up in the morning, how do you feel regarding your energy and the day ahead?',
+    subtext: 'Evaluate your mental and physical battery.',
+    options: [
+      { text: 'Rested & Curious — Ready to tackle my priorities.', score: 0 },
+      { text: 'A bit sluggish — Takes a coffee or shower to get going.', score: 1 },
+      { text: 'Mentally drained — Even after sleeping, I feel depleted.', score: 2 },
+      { text: 'Utterly exhausted — Dread getting out of bed; feel running on empty.', score: 3 }
+    ]
+  },
+  {
+    id: 'p4',
+    category: 'burnout',
+    question: 'Have you noticed an increase in cynicism, detachment, or feeling like "nothing really matters"?',
+    subtext: 'Emotional numbness and detachment are protective defenses against prolonged overload.',
+    options: [
+      { text: 'Not at all — I stay engaged and care deeply about what I do.', score: 0 },
+      { text: 'Occasionally — When I have had a particularly long week.', score: 1 },
+      { text: 'Frequently — I find myself checking out emotionally or feeling indifferent.', score: 2 },
+      { text: 'Very often — I feel deeply disillusioned and emotionally disconnected.', score: 3 }
+    ]
+  },
+  // Depressive Fog & Low Vitality
+  {
+    id: 'p5',
+    category: 'depression',
+    question: 'How is your ability to experience genuine joy, enthusiasm, or excitement for things you usually love?',
+    subtext: 'Psychologists refer to this reduction in pleasure as anhedonia.',
+    options: [
+      { text: 'Vibrant — I readily enjoy hobbies, friends, and small pleasures.', score: 0 },
+      { text: 'Slightly muted — Some things feel less exciting, but still enjoyable.', score: 1 },
+      { text: 'Significantly dampened — Most activities feel like a chore or flat.', score: 2 },
+      { text: 'Almost gone — I feel an emotional numbness or persistent gray haze.', score: 3 }
+    ]
+  },
+  {
+    id: 'p6',
+    category: 'depression',
+    question: 'How loud is your internal self-critic (feelings of guilt, inadequacy, or hopelessness)?',
+    subtext: 'Notice the tone of the voice you use to speak to yourself.',
+    options: [
+      { text: 'Kind & Supportive — I give myself grace when things go wrong.', score: 0 },
+      { text: 'Occasional self-doubt — But I can bounce back fairly quickly.', score: 1 },
+      { text: 'Frequently harsh — I often blame myself or feel not good enough.', score: 2 },
+      { text: 'Relentless — Persistent feeling of worthlessness or deep discouragement.', score: 3 }
+    ]
+  },
+  // Acute Stress & Overwhelm
+  {
+    id: 'p7',
+    category: 'stress',
+    question: 'When multiple tasks or unexpected events pile up, how does your capacity to cope respond?',
+    subtext: 'Assesses executive function and cognitive bandwidth under pressure.',
+    options: [
+      { text: 'Resilient — I prioritize calmly and take one step at a time.', score: 0 },
+      { text: 'Strained but functional — I get a bit stressed, then regain control.', score: 1 },
+      { text: 'Overwhelmed — I feel paralyzed, irritable, or want to avoid everything.', score: 2 },
+      { text: 'Near breaking point — Minor inconveniences provoke extreme panic or tears.', score: 3 }
+    ]
+  },
+  {
+    id: 'p8',
+    category: 'stress',
+    question: 'How frequently do you feel irritable, short-tempered, or on edge with colleagues, friends, or family?',
+    subtext: 'Irritability is one of the most reliable markers of a flooded nervous system.',
+    options: [
+      { text: 'Rarely — I maintain patience even in chaotic situations.', score: 0 },
+      { text: 'Occasionally — Only when hungry or sleep-deprived.', score: 1 },
+      { text: 'Frequently — I snap quickly or have a very short emotional fuse.', score: 2 },
+      { text: 'Almost daily — I constantly feel agitated or easily triggered.', score: 3 }
+    ]
+  },
+  // Sleep & Somatic Disturbance
+  {
+    id: 'p9',
+    category: 'sleep',
+    question: 'What happens when your head hits the pillow at night?',
+    subtext: 'Your circadian rhythm and sleep onset latency reveal nervous system activation.',
+    options: [
+      { text: 'Easy transition — I fall asleep peacefully within 15–20 minutes.', score: 0 },
+      { text: 'Mild delay — Sometimes takes 30–45 mins if I had a stimulating day.', score: 1 },
+      { text: 'Racing thoughts — Mind reviews the day, plans tomorrow, or spins on worries.', score: 2 },
+      { text: 'Chronic struggle — Severe insomnia, wake up repeatedly, or dread bedtime.', score: 3 }
+    ]
+  },
+  // Imposter Syndrome & Self-Doubt
+  {
+    id: 'p10',
+    category: 'imposter',
+    question: 'When you accomplish something significant, what is your genuine internal reaction?',
+    subtext: 'How you attribute your successes reveals your relationship with competence.',
+    options: [
+      { text: 'Pride & Satisfaction — I acknowledge my effort and capability.', score: 0 },
+      { text: 'Modest gratitude — Happy it worked, though recognize some luck.', score: 1 },
+      { text: 'Relief masked as luck — "I just got lucky, they will realize I am faking."', score: 2 },
+      { text: 'Intense fraudulence — Terrified of being "found out" as inadequate.', score: 3 }
+    ]
+  },
+  // People-Pleasing & Boundary Fatigue
+  {
+    id: 'p11',
+    category: 'boundaries',
+    question: 'How easy or difficult is it for you to say "No" when someone asks for your time, energy, or favors?',
+    subtext: 'Healthy boundaries protect your emotional integrity and prevent hidden resentment.',
+    options: [
+      { text: 'Healthy & Clear — I say no respectfully without lingering guilt.', score: 0 },
+      { text: 'Mildly hesitant — Sometimes say yes when I prefer not to, but manage ok.', score: 1 },
+      { text: 'Very difficult — I say yes out of fear of disappointing or conflict.', score: 2 },
+      { text: 'Almost impossible — I constantly sacrifice my well-being to please others.', score: 3 }
+    ]
+  },
+  {
+    id: 'p12',
+    category: 'boundaries',
+    question: 'Do you carry silent resentment toward people because you give much more than you receive?',
+    subtext: 'Unspoken resentment is the classic symptom of porous emotional boundaries.',
+    options: [
+      { text: 'No — My relationships feel mutual, balanced, and open.', score: 0 },
+      { text: 'Rarely — Only in a specific isolated relationship.', score: 1 },
+      { text: 'Often — I feel taken for granted yet keep over-delivering.', score: 2 },
+      { text: 'Deeply & Constantly — I feel exhausted carrying everyone else\'s emotional weight.', score: 3 }
+    ]
+  }
+];
+
+/**
+ * Personality Dimensions:
+ * 1. EI: Extraversion vs Introversion (Where you draw energy)
+ * 2. NS: Intuition / Big Picture vs Sensing / Grounded Reality (How you process info)
+ * 3. TF: Thinking / Logic vs Feeling / Empathy (How you make decisions)
+ * 4. JP: Conscientious Structure vs Spontaneous Flow (How you organize life)
+ */
+const PERSONALITY_QUESTIONS = [
+  // E vs I (Energy Recharge)
+  {
+    id: 'pers_1',
+    dimension: 'EI',
+    question: 'After an exhausting, high-intensity week, how does your battery recharge most naturally?',
+    subtext: 'Notice what truly restores your vitality, not just what looks good on paper.',
+    options: [
+      {
+        text: 'Solitary Sanctuary: Quiet time alone with a book, hobby, or peaceful walk without needing to talk.',
+        trait: 'I',
+        weight: 2
+      },
+      {
+        text: 'Intimate Connection: A quiet one-on-one dinner with a close confidant, but generally low social stimulation.',
+        trait: 'I',
+        weight: 1
+      },
+      {
+        text: 'Vibrant Gathering: Meeting up with a group of friends, attending a social event, or being around lively atmosphere.',
+        trait: 'E',
+        weight: 1
+      },
+      {
+        text: 'High-Energy Socializing: Hosting, conversing, making new connections — being around people energizes me.',
+        trait: 'E',
+        weight: 2
+      }
+    ]
+  },
+  {
+    id: 'pers_2',
+    dimension: 'EI',
+    question: 'When you are trying to understand a complex problem or emotion, what is your instinctual habit?',
+    subtext: 'Examines internal cognitive digestion vs external verbal processing.',
+    options: [
+      {
+        text: 'Internalizing: I retreat into my mind, journal, or reflect deeply before uttering a word.',
+        trait: 'I',
+        weight: 2
+      },
+      {
+        text: 'Quiet Contemplation: I think it through privately first, then may share with one trusted person.',
+        trait: 'I',
+        weight: 1
+      },
+      {
+        text: 'Discussion: Talking it out with someone helps me hear my own thoughts and formulate clarity.',
+        trait: 'E',
+        weight: 1
+      },
+      {
+        text: 'Verbal Brainstorming: I need to speak thoughts out loud; ideas take form as I interact with others.',
+        trait: 'E',
+        weight: 2
+      }
+    ]
+  },
+  // N vs S (Information Lens)
+  {
+    id: 'pers_3',
+    dimension: 'NS',
+    question: 'When learning something new or planning a project, which perspective naturally grabs you first?',
+    subtext: 'Abstract visionaries focus on possibilities; grounded realists focus on tangible facts.',
+    options: [
+      {
+        text: 'Concrete Facts & Steps: Tell me exactly what exists, the verifiable data, and the practical realistic steps.',
+        trait: 'S',
+        weight: 2
+      },
+      {
+        text: 'Hands-On Pragmatism: I prefer proven methods, observable reality, and tangible immediate applications.',
+        trait: 'S',
+        weight: 1
+      },
+      {
+        text: 'Conceptual Frameworks: I look for underlying patterns, future implications, and innovative alternatives.',
+        trait: 'N',
+        weight: 1
+      },
+      {
+        text: 'Visionary Possibilities: I dwell in the world of "what could be", metaphors, big-picture dreams, and novel theories.',
+        trait: 'N',
+        weight: 2
+      }
+    ]
+  },
+  {
+    id: 'pers_4',
+    dimension: 'NS',
+    question: 'How do you describe your day-to-day conversation style?',
+    subtext: 'Notice whether you lean toward literal details or symbolic concepts.',
+    options: [
+      {
+        text: 'Grounded & Literal: I share specific events, sequential details, and what actually occurred in clear terms.',
+        trait: 'S',
+        weight: 1
+      },
+      {
+        text: 'Philosophical & Metaphorical: I connect random ideas, discuss meanings, philosophy, and future visions.',
+        trait: 'N',
+        weight: 1
+      }
+    ]
+  },
+  // T vs F (Decision Compass)
+  {
+    id: 'pers_5',
+    dimension: 'TF',
+    question: 'When a close friend or colleague comes to you with a dilemma, what is your gut response?',
+    subtext: 'Assesses whether your primary instinct is analytical troubleshooting or empathetic resonance.',
+    options: [
+      {
+        text: 'Analytical Architecture: I instantly analyze the root cause, identify flaws, and suggest logical solutions.',
+        trait: 'T',
+        weight: 2
+      },
+      {
+        text: 'Objective Fairness: I look at the objective facts and principles of fairness before looking at emotions.',
+        trait: 'T',
+        weight: 1
+      },
+      {
+        text: 'Empathetic Presence: I first validate how they feel, listen with warmth, and ensure they feel understood.',
+        trait: 'F',
+        weight: 1
+      },
+      {
+        text: 'Deep Compassionate Attunement: I feel what they feel deeply; protecting their emotional well-being is top priority.',
+        trait: 'F',
+        weight: 2
+      }
+    ]
+  },
+  {
+    id: 'pers_6',
+    dimension: 'TF',
+    question: 'When making a tough life choice, what is your ultimate non-negotiable anchor?',
+    subtext: 'Your north star: logical consistency or alignment with human values & feelings.',
+    options: [
+      {
+        text: 'Logical truth, rationality, and strategic long-term efficiency — even if it hurts feelings.',
+        trait: 'T',
+        weight: 2
+      },
+      {
+        text: 'Core human values, empathy, harmony, and how it impacts the hearts of people involved.',
+        trait: 'F',
+        weight: 2
+      }
+    ]
+  },
+  // J vs P (Life Architecture)
+  {
+    id: 'pers_7',
+    dimension: 'JP',
+    question: 'How do you prefer to approach your weekly schedule and daily tasks?',
+    subtext: 'Structure and deliberate order vs flexibility and dynamic spontaneous flow.',
+    options: [
+      {
+        text: 'Strict Order: Structured calendar, to-do lists checked off methodically; I hate loose ends and surprises.',
+        trait: 'J',
+        weight: 2
+      },
+      {
+        text: 'Planned Framework: I like a clear roadmap and deadlines, though I can adapt when necessary.',
+        trait: 'J',
+        weight: 1
+      },
+      {
+        text: 'Adaptive Rhythm: I keep my options open, respond to what inspires me in the moment, and dislike rigid boxes.',
+        trait: 'P',
+        weight: 1
+      },
+      {
+        text: 'Spontaneous Exploration: Pure flexibility; strict schedules suffocate my creativity. I thrive in responsive flow.',
+        trait: 'P',
+        weight: 2
+      }
+    ]
+  },
+  {
+    id: 'pers_8',
+    dimension: 'JP',
+    question: 'When going on a vacation or road trip, which style sounds most enjoyable to you?',
+    subtext: 'Reveals your comfort level with ambiguity vs advance certainty.',
+    options: [
+      {
+        text: 'Curated Itinerary: Bookings confirmed, key attractions scheduled, logistics mapped in advance.',
+        trait: 'J',
+        weight: 1
+      },
+      {
+        text: 'Open Horizon: Just book the ticket; figure out accommodations and wander wherever curiosity leads upon arrival.',
+        trait: 'P',
+        weight: 1
+      }
+    ]
+  }
+];
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    PROBLEM_CATEGORIES,
+    PROBLEM_QUESTIONS,
+    PERSONALITY_QUESTIONS
+  };
+}
+
+/**
+ * MindMirror - Psychological Scoring & Synthesis Engine
+ * Calculates distress dimensions, personality archetypes, and synthesizes personalized recovery blueprints.
+ */
+
+let _PROBLEM_QUESTIONS = typeof PROBLEM_QUESTIONS !== 'undefined' ? PROBLEM_QUESTIONS : [];
+let _PROBLEM_CATEGORIES = typeof PROBLEM_CATEGORIES !== 'undefined' ? PROBLEM_CATEGORIES : {};
+let _PERSONALITY_QUESTIONS = typeof PERSONALITY_QUESTIONS !== 'undefined' ? PERSONALITY_QUESTIONS : [];
+
+if (typeof require !== 'undefined') {
+  try {
+    const qData = require('./questions.js');
+    _PROBLEM_QUESTIONS = qData.PROBLEM_QUESTIONS;
+    _PROBLEM_CATEGORIES = qData.PROBLEM_CATEGORIES;
+    _PERSONALITY_QUESTIONS = qData.PERSONALITY_QUESTIONS;
+  } catch (e) {}
+}
+
+// Personality Archetypes Catalog
+const PERSONALITY_ARCHETYPES = {
+  HARMONIZER: {
+    id: 'HARMONIZER',
+    name: 'The Empathetic Harmonizer',
+    code: 'E/F Axis',
+    archetypeIcon: '🌿',
+    tagline: 'The Emotional Heart & Compassionate Anchor',
+    summary: 'You possess an extraordinary gift for emotional attunement, community connection, and intuitive warmth. You naturally sense how others feel before they even speak, and you pour yourself into creating harmony and genuine belonging.',
+    strengths: [
+      'High Emotional Intelligence (EQ) & deep empathy',
+      'Natural diplomat and compassionate mediator in group friction',
+      'Inspires trust, psychological safety, and loyalty in others',
+      'Value-driven and deeply committed to uplifting those around you'
+    ],
+    shadows: [
+      'Vulnerability to people-pleasing and boundary collapse',
+      'Absorbing the emotional residue and trauma of others as your own',
+      'Difficulty articulating personal needs out of fear of causing disharmony',
+      'Prone to severe guilt when having to disappoint anyone'
+    ],
+    stressReaction: 'When overwhelmed, you tend to over-function for others while silently collapsing inward, feeling unappreciated and emotionally depleted.',
+    optimalRecharge: 'Boundaried solitude in serene natural surroundings, heart-to-heart sharing with reciprocal listeners, and explicit permission to do nothing for anyone else.'
+  },
+  ARCHITECT: {
+    id: 'ARCHITECT',
+    name: 'The Strategic Architect',
+    code: 'N/T/J Axis',
+    archetypeIcon: '🦉',
+    tagline: 'The Visionary Systems Thinker & Master Strategist',
+    summary: 'You view the world through a lens of principles, strategic patterns, and optimization. You have high standards, an incisive intellect, and a relentless drive to turn complex chaos into elegant, functional systems.',
+    strengths: [
+      'Clarity of vision, long-range foresight, and objective rationality',
+      'High intellectual independence and disdain for inefficient dogma',
+      'Exceptional capability to execute structured, ambitious long-term plans',
+      'Calm, analytical composure in the face of logistical chaos'
+    ],
+    shadows: [
+      'Perfectionism and impatience with emotional inefficiency',
+      'Risk of paralysis by analysis when information feels incomplete',
+      'Tendency to intellectualize emotions rather than feeling and processing them',
+      'Holding yourself and others to unrealistically severe standards'
+    ],
+    stressReaction: 'Under intense stress, you obsessively micromanage, withdraw into cynical isolation, or become hypercritical of minor flaws.',
+    optimalRecharge: 'Uninterrupted deep-work flow, intellectual deep-dives on complex topics, physical workouts with clear metrics, and quiet order.'
+  },
+  PIONEER: {
+    id: 'PIONEER',
+    name: 'The Visionary Pioneer',
+    code: 'E/N/P Axis',
+    archetypeIcon: '🦅',
+    tagline: 'The Inspiring Innovator & Catalyst of Possibility',
+    summary: 'You are fueled by curiosity, novel possibilities, and creative vitality. You see invisible connections everywhere, love igniting new projects, and inspire those around you with infectious enthusiasm and open-minded optimism.',
+    strengths: [
+      'Boundless creative imagination and associative thinking',
+      'Magnetic enthusiasm that rallies people around new visions',
+      'Adaptable, quick on your feet, and energized by genuine novelty',
+      'Deep appreciation for individuality and unconventional perspectives'
+    ],
+    shadows: [
+      'Difficulty following through on tedious, repetitive maintenance steps',
+      'Shiny object syndrome and chronic mental restlessness',
+      'Tendency to overcommit and spread your focus across too many frontiers',
+      'Fear of missing out (FOMO) and commitment anxiety'
+    ],
+    stressReaction: 'Under stress, you become scattered, hyper-distracted, anxious about feeling trapped, or experience sudden crashes of uncharacteristic doom.',
+    optimalRecharge: 'Unstructured creative exploration, novel environments, brainstorming without deadlines, and playful physical activities.'
+  },
+  CONTEMPLATOR: {
+    id: 'CONTEMPLATOR',
+    name: 'The Deep Contemplator',
+    code: 'I/N Axis',
+    archetypeIcon: '🌊',
+    tagline: 'The Introspective Philosopher & Seeker of Truth',
+    summary: 'You inhabit a rich, nuanced inner landscape. You are reflective, observant, and driven by an insatiable desire to understand the deeper meaning of life, human nature, and consciousness.',
+    strengths: [
+      'Profound introspective depth and conceptual originality',
+      'Exceptional ability to listen quietly and perceive hidden subtexts',
+      'Fierce authenticity and unwillingness to conform to superficial trends',
+      'Capacity for deep, nuanced contemplation and creative synthesis'
+    ],
+    shadows: [
+      'Risk of existential melancholy and chronic social alienation',
+      'Overthinking mundane decisions until everyday action feels burdensome',
+      'Tendency to retreat completely into your mental cave when hurt',
+      'Sensitivity to sensory overload, harsh criticism, or superficial environments'
+    ],
+    stressReaction: 'When overwhelmed, you disconnect from your physical body, spiral into existential doubt, and build invisible walls around your vulnerability.',
+    optimalRecharge: 'Complete silence, reading in cozy nooks, contemplative journaling, solitary walks in nature, and immersion in evocative art or music.'
+  },
+  CATALYST: {
+    id: 'CATALYST',
+    name: 'The Resilient Catalyst',
+    code: 'S/T/P Axis',
+    archetypeIcon: '⚡',
+    tagline: 'The Pragmatic Problem Solver & Crisis Master',
+    summary: 'You are grounded, action-oriented, and unflappable. Where others panic, you assess the immediate facts with calm practicality and take decisive action to troubleshoot the obstacle in front of you.',
+    strengths: [
+      'Exceptional composure, adaptability, and grit under pressure',
+      'Pragmatic, no-nonsense problem solving rooted in tangible reality',
+      'Hands-on mastery and quick mastery of technical or physical tools',
+      'Direct, refreshingly honest, and grounded communication'
+    ],
+    shadows: [
+      'Can come across as emotionally blunt, skeptical, or detached',
+      'Impatience with theoretical discussions that lack immediate practical utility',
+      'Tendency to bury emotional vulnerabilities beneath physical activity or thrill-seeking',
+      'Disdain for rigid rules or long-winded corporate red tape'
+    ],
+    stressReaction: 'Under stress, you either shut down emotionally into cynical silence or act out impulsively to break the tension.',
+    optimalRecharge: 'Vigorous physical exercise, working with tangible materials or mechanics, high-adrenaline sports, and unstructured personal autonomy.'
+  },
+  DREAMER: {
+    id: 'DREAMER',
+    name: 'The Sensitive Dreamer',
+    code: 'I/F/P Axis',
+    archetypeIcon: '🎨',
+    tagline: 'The Poetic Soul & Guardian of Authenticity',
+    summary: 'You are guided by a deep internal moral compass, immense empathy, and an artistic, idealistic spirit. You yearn for deep authenticity, meaningful connection, and a world where every soul is free to be their truest self.',
+    strengths: [
+      'Extraordinary capacity for unconditional acceptance and empathy',
+      'Rich creative imagination and artistic or expressive sensitivity',
+      'Unyielding dedication to core personal values and quiet justice',
+      'Ability to see beauty and poetry in the ordinary and the vulnerable'
+    ],
+    shadows: [
+      'Prone to deep self-doubt, vulnerability to emotional wounds, and feeling misunderstood',
+      'Idealistic expectations colliding painfully with harsh real-world realities',
+      'Difficulty dealing with administrative or commercial logistics',
+      'Tends to withdraw and freeze when faced with interpersonal conflict'
+    ],
+    stressReaction: 'Under severe stress, you fall into deep melancholic paralysis, feeling alien to the world and questioning your worth or creative gift.',
+    optimalRecharge: 'Creative flow (painting, writing, crafting), gentle sanctuary with no demands, time with animals, and reading stories that feed the spirit.'
+  },
+  PROTECTOR: {
+    id: 'PROTECTOR',
+    name: 'The Grounded Protector',
+    code: 'I/S/J Axis',
+    archetypeIcon: '🛡️',
+    tagline: 'The Steadfast Anchor & Devoted Guardian',
+    summary: 'You are the dependable bedrock of any family, team, or community. Methodical, observant, and deeply loyal, you take quiet pride in creating stability, remembering every detail, and protecting what matters most.',
+    strengths: [
+      'Unshakable reliability, integrity, and follow-through on commitments',
+      'Meticulous memory for personal details, traditions, and practical needs',
+      'Quiet, humble dedication without needing the spotlight',
+      'Master of logistical stability, order, and comforting domestic harmony'
+    ],
+    shadows: [
+      'Overwhelming reluctance to embrace sudden change or uncertainty',
+      'Tendency to bottle up personal pain and martyr yourself silently',
+      'Taking on heavy burdens without ever asking for help',
+      'Difficulty forgiving yourself for perceived mistakes or oversights'
+    ],
+    stressReaction: 'Under stress, you catastrophize worst-case scenarios about the future, feel unappreciated, and exhaust yourself cleaning or organizing frantically.',
+    optimalRecharge: 'A predictable, cozy routine, relaxing domestic hobbies (baking, gardening, crafting), quiet gratitude, and a clean, serene living space.'
+  },
+  COMMUNICATOR: {
+    id: 'COMMUNICATOR',
+    name: 'The Dynamic Communicator',
+    code: 'E/S Axis',
+    archetypeIcon: '🌟',
+    tagline: 'The Magnetic Storyteller & Community Catalyst',
+    summary: 'You bring vibrant energy, charm, and presence wherever you step. You are a natural connector of people, pragmatic yet expressive, with a talent for transforming mundane moments into celebratory memories.',
+    strengths: [
+      'Effortless social magnetism, warmth, and engaging storytelling',
+      'Pragmatic realism combined with uplifting infectious optimism',
+      'Quick ability to read group dynamics and break the ice',
+      'Generous, playful, and deeply attentive to the sensory joys of life'
+    ],
+    shadows: [
+      'Vulnerability to needing external validation or approval',
+      'Tendency to avoid facing heavy negative emotions by seeking distractions',
+      'Difficulty with prolonged solitary work or abstract long-term planning',
+      'Impulsive commitments made in the heat of enthusiasm'
+    ],
+    stressReaction: 'Under stress, you fear abandonment, become hyper-sensitive to perceived coldness, or compulsively seek social buzz to avoid empty quiet.',
+    optimalRecharge: 'Fun, laughter-filled gatherings with close friends, immersive live events, physical movement, and warm celebratory experiences.'
+  }
+};
+
+// Detailed Problem Blueprints (Fixes & Prescriptions)
+const PROBLEM_BLUEPRINTS = {
+  anxiety: {
+    title: 'Generalized Anxiety & Overthinking',
+    subTitle: 'Your Nervous System is Operating in Constant Anticipatory Alarm',
+    neurology: 'Your amygdala (the brain\'s smoke detector) has become hyper-sensitized. It treats imagined future scenarios with the same acute physiological urgency as immediate physical threats. This floods your system with adrenaline and keeps your prefrontal cortex trapped in "what-if" cognitive loops.',
+    immediateRescue: {
+      name: 'The Physiological Sigh & 5-4-3-2-1 Sensory Reset',
+      duration: '3 Minutes',
+      steps: [
+        'Take two quick breaths through your nose: one deep inhale, followed immediately by a sharp "top-off" inhale.',
+        'Release a long, slow sigh through an open mouth (6 to 8 seconds). Repeat 3 times to immediately trigger the parasympathetic vagal brake.',
+        'Engage the 5-4-3-2-1 grounding: Name 5 things you can see right now, 4 physical textures you can feel, 3 distinct sounds you can hear, 2 things you can smell, and 1 taste.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Establish a 15-Minute "Worry Window"',
+        detail: 'Schedule 5:00 PM to 5:15 PM daily as designated worry time. When worries arise at 11:00 AM, write them down and say: "I will process this at 5:00 PM." 80% of worries lose their urgency before the window arrives.'
+      },
+      {
+        title: 'Caffeine Decoupling & Morning Cortisol Reset',
+        detail: 'Delay your first cup of caffeine by 90 minutes after waking. Step outside into natural morning daylight for 10 minutes to reset your circadian adenosine clearance.'
+      },
+      {
+        title: 'Body-First Grounding (Somatic Shakeout)',
+        detail: 'Stand up and gently shake out your hands, shoulders, and legs for 60 seconds whenever you notice circular thoughts. Movement discharges stuck sympathetic arousal.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"What if everything goes wrong and I ruin everything?"',
+      distortion: 'Catastrophizing & Probability Overestimation',
+      reframe: '"My mind is trying to protect me by imagining extremes, but thoughts are not facts. What is the most realistic outcome based on past evidence? Even if something goes awry, I have the resources to handle it step by step."'
+    },
+    mantra: 'I am safe in this present moment. I do not need to solve the future right now.',
+    proAdvice: 'If racing anxiety triggers frequent panic attacks or prevents sleep for more than a month, working with a Cognitive Behavioral Therapist (CBT) or Acceptance and Commitment Therapy (ACT) practitioner is highly transformative.'
+  },
+
+  burnout: {
+    title: 'Burnout & Emotional Exhaustion',
+    subTitle: 'Your Internal Battery Is Completely Depleted from Prolonged Unbalanced Output',
+    neurology: 'Burnout is not ordinary fatigue; it is allostatic overload. Your hypothalamic-pituitary-adrenal (HPA) axis has been running hot for months, resulting in blunted cortisol, dopamine depletion, and emotional flatlining as the brain enters protective shutdown.',
+    immediateRescue: {
+      name: 'Radical Low-Stimulation Reset',
+      duration: '10 Minutes',
+      steps: [
+        'Close all computer tabs, mute notifications, and place your phone in another room.',
+        'Lie flat on the floor or a firm sofa with your legs elevated on a pillow or wall (Viparita Karani pose).',
+        'Place a cool, damp washcloth over your closed eyes and allow your jaw and tongue to go completely limp. Do not try to meditate or be productive.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Build a Non-Negotiable "Buffer Zone"',
+        detail: 'Block off 45 minutes between finishing work/obligations and starting personal life. No emails, no domestic demands. Let your brain decompress.'
+      },
+      {
+        title: 'Audit Your Energy Leaks with the "Energy Ledger"',
+        detail: 'For 3 days, label your daily tasks with (+) Energizing, (-) Draining, or (=) Neutral. Ruthlessly eliminate or delegate 2 draining tasks that produce zero meaningful value.'
+      },
+      {
+        title: 'Shift from Passive Numbing to Active Restoration',
+        detail: 'Doom-scrolling social media exhausts your dopamine circuits further. Replace 30 minutes of scrolling with gentle sensory joy: warm baths, slow instrumental music, or walking without podcasts.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"I should be doing more; taking a break means I am lazy."',
+      distortion: '"Should" Statement & False Dichotomy',
+      reframe: '"Rest is not a reward earned after exhaustion; rest is a biological prerequisite for functioning. Machines that run continuously without maintenance break down. Resting is an act of stewardship."'
+    },
+    mantra: 'My worth is not measured by my productivity. I give myself permission to pause.',
+    proAdvice: 'Burnout requires systemic environmental boundaries, not just self-care. If your workplace or caregiving demands are unsustainable, consider speaking to an occupational psychologist or exploring structured leave.'
+  },
+
+  depression: {
+    title: 'Depressive Fog & Low Vitality',
+    subTitle: 'Your Motivation & Joy Circuits Are Dampened Under Heavy Cognitive Haze',
+    neurology: 'Depression involves dysregulation in dopamine and serotonin pathways, coupled with hyperactivity in the brain\'s Default Mode Network (DMN), the circuit responsible for self-referential rumination, guilt, and gloom.',
+    immediateRescue: {
+      name: 'Micro-Action Rule (The 2-Minute Physical Spark)',
+      duration: '2 Minutes',
+      steps: [
+        'Depression tells you: "Wait until you feel motivated before you move." The neurological reality is: "Action precedes motivation."',
+        'Pick the absolute smallest physical action: splash cold water on your face, wash a single cup, or open the window blinds to let sunlight in.',
+        'Acknowledge that completing this micro-step in the face of heavy fatigue is a legitimate victory.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Behavioral Activation Scheduling',
+        detail: 'Schedule 1 tiny enjoyable or mastery-oriented activity daily (e.g. 5 minutes sketching, stepping outside, listening to an old favorite song), regardless of initial desire.'
+      },
+      {
+        title: 'Direct Morning Sunlight Exposure',
+        detail: 'Get 15 minutes of direct morning sunlight into your eyes (without looking directly at the sun) within 1 hour of waking to stimulate retinal ganglion cells and boost mood-regulating neuromodulators.'
+      },
+      {
+        title: 'Compassionate Voice Journaling',
+        detail: 'When the internal critic attacks, write down its statement, then rewrite it as if you were speaking to a 7-year-old child who is tired and struggling.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"Nothing ever gets better and I have no energy to try."',
+      distortion: 'Emotional Reasoning & Fortune Telling',
+      reframe: '"I am feeling heavy right now, but feelings are temporary weather systems, not permanent climates. The fact that I feel tired today does not predict my entire future. One gentle step at a time is enough."'
+    },
+    mantra: 'This heaviness is something I am carrying, not who I am. Better days are ahead.',
+    proAdvice: 'Depression is treatable and you do not have to carry it alone. Please reach out to a licensed counselor, physician, or mental health hotline for compassionate, professional care.'
+  },
+
+  stress: {
+    title: 'Acute Stress & Overwhelm',
+    subTitle: 'Cognitive Bandwidth Overload & Executive Function Saturation',
+    neurology: 'Your working memory holds 4 to 7 items maximum. When life demands 20 items simultaneously, your prefrontal cortex experiences severe cognitive bottlenecking, triggering elevated cortisol, irritability, and executive paralysis.',
+    immediateRescue: {
+      name: 'The Brain-Dump & Eisenhower Triage',
+      duration: '5 Minutes',
+      steps: [
+        'Grab a blank piece of paper and write down EVERY single task, worry, and chore spinning in your head until your mind feels completely empty.',
+        'Draw a line through anything you cannot control today.',
+        'Select ONLY ONE single item that will be your sole focus for the next 25 minutes. Hide everything else from view.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Implement the "Rule of 3" Daily',
+        detail: 'Never start a day with a 20-item to-do list. Identify the 3 critical outcomes that truly move the needle. When those 3 are done, the day is considered a success.'
+      },
+      {
+        title: 'Single-Tasking Sanctuary',
+        detail: 'Multitasking increases cortisol production by 30%. Close extra browser tabs. Put your phone in "Do Not Disturb" mode during focused work blocks.'
+      },
+      {
+        title: 'Vagus Nerve Reset: Cold Water Exposure',
+        detail: 'Submerge your face in a bowl of ice-cold water or splash cold water on your forehead and cheeks for 15 seconds. This stimulates the mammalian dive reflex and drops heart rate.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"If I do not get everything done today, disaster will strike."',
+      distortion: 'Catastrophizing & All-or-Nothing Thinking',
+      reframe: '"Most things on my plate are urgent in feeling, but not critical in reality. What actually happens if this waits until tomorrow? The world will keep spinning, and I will be more capable with a clear mind."'
+    },
+    mantra: 'I can only do one thing at a time, and that is more than enough.',
+    proAdvice: 'Chronic stress damages cardiovascular and immune health over time. Consider stress-reduction coaching, MBSR (Mindfulness-Based Stress Reduction), or restructuring workload.'
+  },
+
+  sleep: {
+    title: 'Sleep & Somatic Disturbance',
+    subTitle: 'Hyper-Aroused Nervous System Impeding Natural Circadian Transition',
+    neurology: 'Your brain associates bedtime with problem-solving or anxiety instead of biological surrender. High nocturnal cortisol keeps core body temperature elevated, preventing the natural dip needed for deep restorative slow-wave sleep.',
+    immediateRescue: {
+      name: 'The 20-Minute "Reset & Return" Rule',
+      duration: '20 Minutes',
+      steps: [
+        'If you are tossing and turning for more than 20 minutes, DO NOT stay in bed watching the clock.',
+        'Get out of bed in dim, amber light. Sit in a comfortable chair and read a physical book or listen to calming audio.',
+        'Return to bed only when your eyelids feel heavy. This breaks the neurological conditioning linking bed with frustration.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'The "Digital Sun-Down" at 9:00 PM',
+        detail: 'Blue light from screens suppresses melatonin release by up to 85%. Turn screens off 60 minutes before bed or activate dark-orange blue-light blocking filters.'
+      },
+      {
+        title: 'Bedtime Mental Offload (Worry Journal)',
+        detail: 'Keep a notebook on your nightstand. Before lying down, spend 3 minutes writing down tomorrow\'s schedule and any nagging thoughts to signal your brain they are stored safely.'
+      },
+      {
+        title: 'Thermal Core Dip (Warm Shower Hack)',
+        detail: 'Take a warm bath or shower 90 minutes before sleep. When you exit, blood rushes to the extremities, causing your core body temperature to rapidly drop, which triggers natural sleepiness.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"If I do not fall asleep in 10 minutes, tomorrow will be a total disaster."',
+      distortion: 'Catastrophic Fortune Telling',
+      reframe: '"Resting my body quietly in darkness still gives my muscles and heart restorative recovery, even if I am not fully asleep yet. Human bodies are remarkably resilient, and I have functioned fine after poor nights before."'
+    },
+    mantra: 'The day is done. There is nothing left to solve tonight. I release control.',
+    proAdvice: 'Cognitive Behavioral Therapy for Insomnia (CBT-I) is the gold standard clinical treatment for chronic sleep issues and is far more effective long-term than sleep medications.'
+  },
+
+  imposter: {
+    title: 'Imposter Syndrome & Self-Doubt',
+    subTitle: 'Perfectionistic Standards Shielding Hidden Fears of Inadequacy',
+    neurology: 'The imposter phenomenon stems from an asymmetry in how you process evidence: successes are filtered out as "luck" or "timing," while mistakes are amplified as proof of fundamental inadequacy. This keeps your threat circuitry on high guard.',
+    immediateRescue: {
+      name: 'The "Evidence Folder" Reality Check',
+      duration: '4 Minutes',
+      steps: [
+        'Open a dedicated note on your phone titled "Fact Bank: Concrete Evidence of Competence."',
+        'Review 3 factual, documented successes: degrees earned, projects completed, positive client reviews, or problems you solved.',
+        'Remind yourself: Luck does not repeatedly perform consistent complex tasks; your skill did.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Embrace "B+ Quality" as the Standard',
+        detail: 'Perfectionism is anxiety in fancy clothing. For 3 low-stakes tasks this week, deliberately stop at 85% completion instead of 100%. Notice that nothing explodes.'
+      },
+      {
+        title: 'Track Success Attributions',
+        detail: 'When someone compliments your work, replace "Oh, it was nothing / I got lucky" with a simple: "Thank you, I put a lot of careful thought into that."'
+      },
+      {
+        title: 'Normalize the Learning Curve',
+        detail: 'When you feel out of your depth, say: "I feel like a fraud because I am growing at the edge of my comfort zone, not because I am incompetent."'
+      }
+    ],
+    cbtReframe: {
+      thought: '"Everyone here is smarter than me; it is only a matter of time before I am exposed."',
+      distortion: 'Mind Reading & Discounting the Positive',
+      reframe: '"I am comparing my messy internal doubts to everyone else\'s polished external highlight reel. No one knows everything. I earned my seat at this table, and I am allowed to learn as I go."'
+    },
+    mantra: 'I do not need to be flawless to be worthy and capable.',
+    proAdvice: 'Imposter syndrome often flourishes in high-achieving environments with little psychological safety. Connecting with mentors and peers who openly discuss their own vulnerabilities can dissolve the illusion.'
+  },
+
+  boundaries: {
+    title: 'People-Pleasing & Boundary Fatigue',
+    subTitle: 'Your Protective Boundaries Have Dissolved to Maintain External Approval',
+    neurology: 'People-pleasing is often a "fawn" trauma/stress response. Your nervous system historically learned that staying safe and loved required monitoring other people\'s emotional states and preemptively accommodating them at your own expense.',
+    immediateRescue: {
+      name: 'The "24-Hour Buffer" Script',
+      duration: 'Instant',
+      steps: [
+        'Whenever someone asks you for a favor or commitment, eliminate the automatic reflex "Yes."',
+        'Use this non-negotiable script: "Thanks for thinking of me! Let me check my current priorities and calendar, and I will get back to you by tomorrow."',
+        'This creates critical cognitive space between the external request and your nervous system\'s pleasing reflex.'
+      ]
+    },
+    weeklyHabits: [
+      {
+        title: 'Practice the "Kind No" Without Over-Explaining',
+        detail: 'Over-explaining your reasons invites negotiation. Practice saying: "I won\'t be able to take that on right now, but thank you for asking." Clear and polite.'
+      },
+      {
+        title: 'Check Your Resentment Thermometer',
+        detail: 'Whenever you feel angry or bitter toward someone, ask yourself: "Where did I say yes when I really wanted to say no?" Resentment is your boundary alarm.'
+      },
+      {
+        title: 'Embrace the Discomfort of Other People\'s Reactions',
+        detail: 'You are responsible for being respectful; you are NOT responsible for managing another adult\'s disappointment when you enforce a reasonable boundary.'
+      }
+    ],
+    cbtReframe: {
+      thought: '"If I say no, they will be upset with me and think I am selfish and uncaring."',
+      distortion: 'Emotional Reasoning & Mind Reading',
+      reframe: '"Saying no to an external demand is saying yes to my own health and integrity. True relationships respect boundaries; relationships that only survive when I sacrifice myself are not healthy."'
+    },
+    mantra: 'My needs are valid. "No" is a complete and loving sentence.',
+    proAdvice: 'If boundary setting causes overwhelming terror or panic, working with a therapist on assertiveness training and inner child reparenting creates deep lasting peace.'
+  }
+};
+
+/**
+ * Score calculation functions
+ */
+function calculateProblemResults(answers) {
+  // answers: { questionId: score }
+  const categoryScores = {
+    anxiety: 0,
+    burnout: 0,
+    depression: 0,
+    stress: 0,
+    sleep: 0,
+    imposter: 0,
+    boundaries: 0
+  };
+
+  const categoryMaxPossible = {
+    anxiety: 0,
+    burnout: 0,
+    depression: 0,
+    stress: 0,
+    sleep: 0,
+    imposter: 0,
+    boundaries: 0
+  };
+
+  // Tally scores based on questions dataset
+  _PROBLEM_QUESTIONS.forEach(q => {
+    categoryMaxPossible[q.category] += 3;
+    const ansScore = answers[q.id] !== undefined ? answers[q.id] : 0;
+    categoryScores[q.category] += ansScore;
+  });
+
+  // Calculate percentages
+  const percentages = {};
+  let totalScore = 0;
+  let totalMax = 0;
+
+  Object.keys(categoryScores).forEach(cat => {
+    percentages[cat] = Math.round((categoryScores[cat] / categoryMaxPossible[cat]) * 100);
+    totalScore += categoryScores[cat];
+    totalMax += categoryMaxPossible[cat];
+  });
+
+  const overallPercentage = Math.round((totalScore / totalMax) * 100);
+
+  // Sort categories by score descending
+  const sortedCategories = Object.keys(categoryScores).sort((a, b) => {
+    return percentages[b] - percentages[a];
+  });
+
+  const primaryCategory = sortedCategories[0];
+  const secondaryCategory = sortedCategories[1];
+
+  let severity = 'Low';
+  let severityClass = 'severity-low';
+  let severityDescription = 'Balanced & Resilient Baseline. You are currently navigating daily life with healthy psychological bandwidth.';
+
+  if (overallPercentage >= 65 || percentages[primaryCategory] >= 75) {
+    severity = 'Elevated';
+    severityClass = 'severity-high';
+    severityDescription = 'Significant Emotional Strain Detected. Your nervous system is signaling that your current load is exceeding sustainable capacity. Prioritizing active recovery is essential.';
+  } else if (overallPercentage >= 35 || percentages[primaryCategory] >= 50) {
+    severity = 'Moderate';
+    severityClass = 'severity-medium';
+    severityDescription = 'Moderate Stress & Fatigue. You are functioning, but carrying noticeable strain in specific areas. Proactive micro-interventions will prevent deeper depletion.';
+  }
+
+  const blueprint = PROBLEM_BLUEPRINTS[primaryCategory];
+  const secondaryBlueprint = PROBLEM_BLUEPRINTS[secondaryCategory];
+
+  return {
+    categoryScores,
+    percentages,
+    overallPercentage,
+    primaryCategory,
+    secondaryCategory,
+    primaryMeta: (_PROBLEM_CATEGORIES && _PROBLEM_CATEGORIES[primaryCategory]) || { id: primaryCategory, name: primaryCategory, icon: '🧠', color: '#6366f1', description: '' },
+    secondaryMeta: (_PROBLEM_CATEGORIES && _PROBLEM_CATEGORIES[secondaryCategory]) || { id: secondaryCategory, name: secondaryCategory, icon: '🧠', color: '#8b5cf6', description: '' },
+    severity,
+    severityClass,
+    severityDescription,
+    blueprint,
+    secondaryBlueprint,
+    sortedCategories
+  };
+}
+
+function calculatePersonalityResults(answers) {
+  // answers: { questionId: { trait: 'E', weight: 2 } }
+  const traitScores = {
+    E: 0,
+    I: 0,
+    N: 0,
+    S: 0,
+    T: 0,
+    F: 0,
+    J: 0,
+    P: 0
+  };
+
+  _PERSONALITY_QUESTIONS.forEach(q => {
+    const selected = answers[q.id];
+    if (selected && selected.trait && selected.weight) {
+      traitScores[selected.trait] += selected.weight;
+    }
+  });
+
+  // Determine dominant poles
+  const EI = traitScores.E >= traitScores.I ? 'E' : 'I';
+  const NS = traitScores.N >= traitScores.S ? 'N' : 'S';
+  const TF = traitScores.T >= traitScores.F ? 'T' : 'F';
+  const JP = traitScores.J >= traitScores.P ? 'J' : 'P';
+
+  const fourLetterCode = `${EI}${NS}${TF}${JP}`;
+
+  // Dimension percentages
+  const totalEI = (traitScores.E + traitScores.I) || 1;
+  const totalNS = (traitScores.N + traitScores.S) || 1;
+  const totalTF = (traitScores.T + traitScores.F) || 1;
+  const totalJP = (traitScores.J + traitScores.P) || 1;
+
+  const ratios = {
+    E: Math.round((traitScores.E / totalEI) * 100),
+    I: Math.round((traitScores.I / totalEI) * 100),
+    N: Math.round((traitScores.N / totalNS) * 100),
+    S: Math.round((traitScores.S / totalNS) * 100),
+    T: Math.round((traitScores.T / totalTF) * 100),
+    F: Math.round((traitScores.F / totalTF) * 100),
+    J: Math.round((traitScores.J / totalJP) * 100),
+    P: Math.round((traitScores.P / totalJP) * 100)
+  };
+
+  // Map 4-letter or dominant dimensions to our 8 core archetypes
+  let matchedKey = 'HARMONIZER';
+
+  if (NS === 'N' && TF === 'T' && JP === 'J') {
+    matchedKey = 'ARCHITECT'; // INTJ / ENTJ
+  } else if (EI === 'E' && NS === 'N' && JP === 'P') {
+    matchedKey = 'PIONEER'; // ENFP / ENTP
+  } else if (EI === 'I' && NS === 'N') {
+    matchedKey = 'CONTEMPLATOR'; // INFJ / INTP
+  } else if (NS === 'S' && TF === 'T' && JP === 'P') {
+    matchedKey = 'CATALYST'; // ESTP / ISTP
+  } else if (EI === 'I' && TF === 'F') {
+    matchedKey = 'DREAMER'; // INFP / ISFP
+  } else if (NS === 'S' && JP === 'J') {
+    matchedKey = 'PROTECTOR'; // ISFJ / ISTJ
+  } else if (EI === 'E' && NS === 'S') {
+    matchedKey = 'COMMUNICATOR'; // ESFP / ESTJ
+  } else {
+    matchedKey = 'HARMONIZER'; // ENFJ / ESFJ
+  }
+
+  const archetype = PERSONALITY_ARCHETYPES[matchedKey];
+
+  return {
+    fourLetterCode,
+    matchedKey,
+    archetype,
+    traitScores,
+    ratios,
+    dominantAxes: {
+      energy: EI === 'E' ? `Extraverted (${ratios.E}%)` : `Introverted (${ratios.I}%)`,
+      lens: NS === 'N' ? `Visionary / Intuitive (${ratios.N}%)` : `Grounded / Practical (${ratios.S}%)`,
+      decisions: TF === 'T' ? `Analytical / Logic (${ratios.T}%)` : `Empathetic / Heart (${ratios.F}%)`,
+      lifestyle: JP === 'J' ? `Structured / Methodical (${ratios.J}%)` : `Spontaneous / Fluid (${ratios.P}%)`
+    }
+  };
+}
+
+/**
+ * Cross-Synthesis: Intersects personality archetype with current primary challenge
+ */
+function generateCrossSynthesis(problemKey, archetypeKey) {
+  const synthesisMatrix = {
+    HARMONIZER: {
+      anxiety: 'As an Empathetic Harmonizer, your anxiety often centers on relationship dynamics, fear of upsetting others, or hyper-vigilance about social acceptance. Your antidote is recognizing that you cannot control how other people feel, and learning to sit comfortably with temporary tension.',
+      burnout: 'You are vulnerable to "compassion fatigue." You pour from an empty cup because saying no feels painful. Your recovery requires radical energetic boundaries: treating your energy as sacred, not as communal property.',
+      depression: 'When you feel depressed, you often hide behind a bright smile so you don’t burden anyone else. Your healing breakthrough occurs when you let someone else support and hold space for you.',
+      stress: 'You absorb stress from your entire environment like an emotional sponge. Step away from toxic group chats and allow yourself periods of isolated silence to discharge other people\'s energy.',
+      sleep: 'Nighttime is when your brain reviews every interaction from the day, worrying if someone felt slighted. Use self-compassion mantras before bed.',
+      imposter: 'You tend to credit everyone else on your team while erasing your own crucial contributions. Practice claiming your legitimate accomplishments.',
+      boundaries: 'This is your primary lifelong growth edge. Remember: Boundaries are the distance at which you can love both yourself and others simultaneously.'
+    },
+    ARCHITECT: {
+      anxiety: 'Your anxiety manifests as "paralysis by analysis." You try to calculate every 10-step contingency to eliminate uncertainty. Your fix is somatic: moving out of your head and into physical sensations, accepting that uncertainty is inherent to life.',
+      burnout: 'You drive yourself ruthlessly toward perfection, viewing rest as an inconvenient logistical inefficiency. You must reframe rest as strategic recovery that keeps your brain functioning at peak performance.',
+      depression: 'You tend to intellectualize depressive feelings, seeking a logical equation to fix it. Allow yourself to simply feel without needing an immediate algorithmic solution.',
+      stress: 'When stressed, you become hypercritical and micromanage everything. Delegate, let low-priority tasks stay imperfect, and take a step back from the control tower.',
+      sleep: 'Your active brain wants to solve tomorrow\'s problems at midnight. Keep a notepad by your bed to park ideas outside your working memory.',
+      imposter: 'Because your standards are astronomically high, you view anything less than flawlessness as incompetence. Learn to celebrate a 90% execution.',
+      boundaries: 'You generally have clear intellectual boundaries, but may struggle with emotional tolerance when others do not meet your high standards.'
+    },
+    PIONEER: {
+      anxiety: 'Your racing visionary mind generates endless possibilities — and your anxiety turns those into catastrophic "what-if" branches. Anchor yourself in physical grounding and pick ONE concrete task.',
+      burnout: 'You burn out from over-committing to exciting projects and neglecting physical self-care. Practice saying: "That is a brilliant idea, but not for this season of my life."',
+      depression: 'When depression hits, you feel suffocated by routine and lose your creative spark. Seek small, low-pressure sparks of novelty: walk a new neighborhood or learn something whimsical.',
+      stress: 'You scatter in ten directions at once when overwhelmed. Put away all devices and focus on just one physical micro-task to restore your executive flow.',
+      sleep: 'Late-night creative ideas keep your dopamine firing. Implement a strict "screens off" ritual 60 minutes before bedtime.',
+      imposter: 'Because you jump between interests, you may fear you are a "jack of all trades, master of none." Remember that your associative synthesis is your superpower.',
+      boundaries: 'You struggle to say no to new ideas and collaborations. Guard your schedule as fiercely as you guard your freedom.'
+    },
+    CONTEMPLATOR: {
+      anxiety: 'You experience anxiety as existential dread and intense internal rumination. Break the loop by talking to a trusted friend or engaging in vigorous physical movement.',
+      burnout: 'Sensory overload and prolonged superficial socializing deeply drain your nervous system. You need deep, restorative quiet in low-sensory environments.',
+      depression: 'You can spiral into dark philosophical nihilism. Counteract this by finding grounded, simple tactile rituals: cooking, planting, or petting an animal.',
+      stress: 'Under stress, you retreat into your shell and shut down communication. Let loved ones know you just need temporary quiet, not that you are abandoning them.',
+      sleep: 'Your philosophical mind wakes up at 2 AM. Avoid reading intense or heavy topics right before bed; choose light, soothing fiction or nature audio.',
+      imposter: 'You feel misunderstood or like an outsider. Recognize that your depth and quiet wisdom are rare gifts in a fast-paced world.',
+      boundaries: 'You often tolerate boundary violations silently until you abruptly slam the emotional door. Practice expressing minor preferences earlier.'
+    },
+    CATALYST: {
+      anxiety: 'You experience anxiety physically: fidgeting, restlessness, and an urge to escape or take drastic action. Channel that energy into high-intensity physical workouts or hands-on projects.',
+      burnout: 'You push your body to physical limits and ignore early warning fatigue signs until you crash. Schedule non-negotiable physical rest days.',
+      depression: 'You may mask emotional pain with thrill-seeking, work, or distractions. Slow down and allow yourself to talk honestly about what hurts.',
+      stress: 'Under stress, you can become blunt, impatient, and reactive. Practice the 10-second pause before responding to frustrating messages.',
+      sleep: 'Physical exhaustion usually helps you sleep, but chronic tension can cause restlessness. Use progressive muscle relaxation before bed.',
+      imposter: 'You focus on pragmatic outcomes; if something feels overly theoretical or corporate, you may feel out of place. Trust your practical troubleshooting genius.',
+      boundaries: 'You have natural boundaries with strangers, but may avoid addressing deep emotional conflicts with those closest to you.'
+    },
+    DREAMER: {
+      anxiety: 'Your rich imagination can invent vivid emotional scenarios of rejection or failure. Ground yourself in factual reality and creative expression.',
+      burnout: 'Working in environments that violate your authentic values drains your spirit faster than physical labor. Seek value-aligned projects and gentle sanctuaries.',
+      depression: 'Depression feels like a poetic sadness that pulls you inward. Gentle creative expression (writing, painting) without judgment can act as a bridge back to life.',
+      stress: 'You freeze and experience executive paralysis under chaotic demands. Break your mountain down into a single gentle pebble of action.',
+      sleep: 'Emotional sensitivity can cause vivid, restless dreams or sleep onset anxiety. Herbal teas, warm baths, and calming instrumental soundscapes are your allies.',
+      imposter: 'You often undervalue your gentle, empathetic qualities because the world rewards loud aggression. Your quiet empathy is deeply needed.',
+      boundaries: 'You dislike conflict so intensely that you swallow your own desires. Remember that honest boundaries preserve friendships; silent martyrdom destroys them.'
+    },
+    PROTECTOR: {
+      anxiety: 'You worry about worst-case disruptions to family, security, or financial stability. Challenge these catastrophizing thoughts with historical evidence of your resilience.',
+      burnout: 'You carry the silent domestic or organizational load of everyone around you. You must ask for tangible help and let others share the weight.',
+      depression: 'You hide your struggle behind dependable competence. Reach out to someone you trust and tell them: "I am having a hard time right now."',
+      stress: 'Unpredictable changes and chaotic disruptions spike your stress. Create small predictable daily rituals that anchor your sense of control.',
+      sleep: 'You mentally tick through tomorrow\'s errands and checklists at night. Write them on paper before bed to give your mind permission to sleep.',
+      imposter: 'You downplay your immense organizational skill as "just common sense." Acknowledge how much value your steady dependability creates.',
+      boundaries: 'You feel immense guilt when saying no to family or close friends. Reframe saying no as protecting your longevity so you can continue to care.'
+    },
+    COMMUNICATOR: {
+      anxiety: 'Your anxiety often manifests as social anxiety or fear of missing out and losing relevance. Disconnect from social media and reconnect with one grounding friend.',
+      burnout: 'You exhaust yourself performing and entertaining for others even when you feel empty. Give yourself permission to be quiet and unentertaining.',
+      depression: 'Loneliness and feeling unseen trigger deep emotional drops for you. Seek genuine, intimate one-on-one connection rather than superficial crowd buzz.',
+      stress: 'You become frantic and talkative when stressed, seeking instant reassurance. Practice deep belly breathing in solitude to self-soothe.',
+      sleep: 'High sensory stimulation late into the evening disrupts your melatonin. Dim the lights and swap screens for calming acoustic sounds at night.',
+      imposter: 'You worry that if people see you without your charm or humor, they won\'t like you. Your authentic vulnerability is far more lovable than a performance.',
+      boundaries: 'You fear saying no because you don\'t want to disappoint anyone. True friends celebrate your boundaries.'
+    }
+  };
+
+  const defaultSynthesis = 'By understanding your personality wiring, you can stop fighting your natural instincts and instead craft coping mechanisms tailored specifically to your psychological blueprint.';
+
+  const archetypeDict = synthesisMatrix[archetypeKey] || synthesisMatrix.HARMONIZER;
+  return archetypeDict[problemKey] || defaultSynthesis;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    PERSONALITY_ARCHETYPES,
+    PROBLEM_BLUEPRINTS,
+    calculateProblemResults,
+    calculatePersonalityResults,
+    generateCrossSynthesis
+  };
+}
+
+/**
+ * MindMirror - Interactive Breath Pacer
+ * Uses requestAnimationFrame and Web Audio API (synthesized chime) for calming breathwork.
+ */
+
+class BreathPacer {
+  constructor(canvasId, instructionId, timerId, cycleCountId) {
+    this.canvas = document.getElementById(canvasId);
+    this.instructionEl = document.getElementById(instructionId);
+    this.timerEl = document.getElementById(timerId);
+    this.cycleCountEl = document.getElementById(cycleCountId);
+    
+    this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+    this.isRunning = false;
+    this.mode = 'box'; // 'box', '478', 'sigh'
+    this.soundEnabled = false;
+
+    // Pattern definitions in milliseconds
+    this.patterns = {
+      box: [
+        { label: 'Inhale slowly through nose', duration: 4000, action: 'inhale' },
+        { label: 'Hold breath gently', duration: 4000, action: 'hold' },
+        { label: 'Exhale smoothly through mouth', duration: 4000, action: 'exhale' },
+        { label: 'Hold empty and still', duration: 4000, action: 'holdEmpty' }
+      ],
+      '478': [
+        { label: 'Inhale deeply through nose', duration: 4000, action: 'inhale' },
+        { label: 'Hold breath peacefully', duration: 7000, action: 'hold' },
+        { label: 'Long, soothing whoosh exhale', duration: 8000, action: 'exhale' }
+      ],
+      sigh: [
+        { label: 'Deep inhale through nose', duration: 2500, action: 'inhale' },
+        { label: 'Quick top-off second sniff', duration: 1200, action: 'sniff' },
+        { label: 'Long, releasing audible sigh', duration: 6000, action: 'exhale' }
+      ]
+    };
+
+    this.currentStepIndex = 0;
+    this.stepStartTime = 0;
+    this.totalSeconds = 0;
+    this.completedCycles = 0;
+    this.animationFrame = null;
+    this.timerInterval = null;
+    this.audioCtx = null;
+
+    if (this.canvas) {
+      this.initCanvasSize();
+      this.drawPacer(0.4, 'rgba(99, 102, 241, 0.4)', 'Ready');
+    }
+  }
+
+  initCanvasSize() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = this.canvas.getBoundingClientRect();
+    const size = Math.min(rect.width || 260, 260);
+    this.canvas.width = size * dpr;
+    this.canvas.height = size * dpr;
+    this.ctx.scale(dpr, dpr);
+    this.size = size;
+  }
+
+  initAudio() {
+    if (!this.audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      this.audioCtx = new AudioCtx();
+    }
+  }
+
+  playGentleTone(frequency = 432, type = 'sine', duration = 1.2) {
+    if (!this.soundEnabled) return;
+    try {
+      this.initAudio();
+      if (!this.audioCtx) return;
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, this.audioCtx.currentTime);
+
+      // Smooth subtle fade-in and exponential decay
+      gain.gain.setValueAtTime(0.001, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, this.audioCtx.currentTime + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + duration);
+    } catch (e) {
+      console.warn('Audio playback not supported or blocked:', e);
+    }
+  }
+
+  setMode(mode) {
+    if (this.patterns[mode]) {
+      this.mode = mode;
+      if (this.isRunning) {
+        this.currentStepIndex = 0;
+        this.stepStartTime = performance.now();
+      }
+    }
+  }
+
+  toggleSound(enabled) {
+    this.soundEnabled = enabled !== undefined ? enabled : !this.soundEnabled;
+    if (this.soundEnabled) {
+      this.initAudio();
+      this.playGentleTone(528, 'sine', 0.8);
+    }
+    return this.soundEnabled;
+  }
+
+  start() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.currentStepIndex = 0;
+    this.stepStartTime = performance.now();
+    this.totalSeconds = 0;
+    this.completedCycles = 0;
+
+    if (this.timerEl) this.timerEl.textContent = '00:00';
+    if (this.cycleCountEl) this.cycleCountEl.textContent = '0';
+
+    this.timerInterval = setInterval(() => {
+      this.totalSeconds++;
+      const mins = String(Math.floor(this.totalSeconds / 60)).padStart(2, '0');
+      const secs = String(this.totalSeconds % 60).padStart(2, '0');
+      if (this.timerEl) this.timerEl.textContent = `${mins}:${secs}`;
+    }, 1000);
+
+    this.playGentleTone(432, 'sine', 1.0);
+    this.loop();
+  }
+
+  stop() {
+    this.isRunning = false;
+    if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    if (this.instructionEl) {
+      this.instructionEl.textContent = 'Session paused. Take a gentle breath.';
+    }
+    this.drawPacer(0.4, 'rgba(99, 102, 241, 0.3)', 'Paused');
+  }
+
+  reset() {
+    this.stop();
+    this.totalSeconds = 0;
+    this.completedCycles = 0;
+    this.currentStepIndex = 0;
+    if (this.timerEl) this.timerEl.textContent = '00:00';
+    if (this.cycleCountEl) this.cycleCountEl.textContent = '0';
+    if (this.instructionEl) this.instructionEl.textContent = 'Click "Begin Breathing" to calm your nervous system';
+    this.drawPacer(0.4, 'rgba(99, 102, 241, 0.4)', 'Ready');
+  }
+
+  loop() {
+    if (!this.isRunning) return;
+
+    const currentPattern = this.patterns[this.mode];
+    const currentStep = currentPattern[this.currentStepIndex];
+    const now = performance.now();
+    const elapsed = now - this.stepStartTime;
+    const progress = Math.min(elapsed / currentStep.duration, 1.0);
+
+    // Calculate scale and colors based on action
+    let scale = 0.4;
+    let label = currentStep.label;
+    let color = 'rgba(99, 102, 241, 0.7)';
+
+    if (currentStep.action === 'inhale') {
+      scale = 0.4 + 0.5 * this.easeInOutCubic(progress);
+      color = 'rgba(99, 102, 241, 0.85)';
+    } else if (currentStep.action === 'sniff') {
+      scale = 0.85 + 0.1 * this.easeInOutCubic(progress);
+      color = 'rgba(129, 140, 248, 0.9)';
+    } else if (currentStep.action === 'hold') {
+      scale = 0.9 + 0.03 * Math.sin(progress * Math.PI * 2);
+      color = 'rgba(16, 185, 129, 0.85)';
+    } else if (currentStep.action === 'exhale') {
+      scale = 0.9 - 0.5 * this.easeInOutCubic(progress);
+      color = 'rgba(14, 165, 233, 0.85)';
+    } else if (currentStep.action === 'holdEmpty') {
+      scale = 0.4 + 0.02 * Math.sin(progress * Math.PI * 2);
+      color = 'rgba(168, 85, 247, 0.85)';
+    }
+
+    const remainingSecs = Math.max(1, Math.ceil((currentStep.duration - elapsed) / 1000));
+    if (this.instructionEl) {
+      this.instructionEl.innerHTML = `<strong>${label}</strong> <span class="countdown-badge">${remainingSecs}s</span>`;
+    }
+
+    this.drawPacer(scale, color, remainingSecs);
+
+    if (elapsed >= currentStep.duration) {
+      // Step complete, advance
+      this.currentStepIndex = (this.currentStepIndex + 1) % currentPattern.length;
+      this.stepStartTime = performance.now();
+
+      if (this.currentStepIndex === 0) {
+        this.completedCycles++;
+        if (this.cycleCountEl) this.cycleCountEl.textContent = this.completedCycles;
+        this.playGentleTone(528, 'sine', 1.2);
+      } else {
+        const nextStep = currentPattern[this.currentStepIndex];
+        const toneFreq = nextStep.action === 'exhale' ? 396 : 432;
+        this.playGentleTone(toneFreq, 'sine', 0.8);
+      }
+    }
+
+    this.animationFrame = requestAnimationFrame(() => this.loop());
+  }
+
+  easeInOutCubic(x) {
+    return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  }
+
+  drawPacer(scaleRatio, color, text) {
+    if (!this.ctx) return;
+    const size = this.size;
+    const center = size / 2;
+    const baseRadius = size * 0.44;
+    const currentRadius = baseRadius * scaleRatio;
+
+    this.ctx.clearRect(0, 0, size, size);
+
+    // Draw outer guide boundary ring
+    this.ctx.beginPath();
+    this.ctx.arc(center, center, baseRadius * 0.92, 0, Math.PI * 2);
+    this.ctx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+    this.ctx.lineWidth = 2;
+    this.ctx.setLineDash([4, 6]);
+    this.ctx.stroke();
+    this.ctx.setLineDash([]);
+
+    // Outer subtle ambient glow
+    const gradGlow = this.ctx.createRadialGradient(center, center, currentRadius * 0.5, center, center, currentRadius * 1.3);
+    gradGlow.addColorStop(0, color);
+    gradGlow.addColorStop(0.7, color.replace('0.85', '0.2').replace('0.9', '0.25').replace('0.7', '0.2'));
+    gradGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+    this.ctx.beginPath();
+    this.ctx.arc(center, center, currentRadius * 1.25, 0, Math.PI * 2);
+    this.ctx.fillStyle = gradGlow;
+    this.ctx.fill();
+
+    // Central pulsing breathing bubble
+    const gradCircle = this.ctx.createRadialGradient(center - currentRadius * 0.25, center - currentRadius * 0.25, 2, center, center, currentRadius);
+    gradCircle.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    gradCircle.addColorStop(0.4, color);
+    gradCircle.addColorStop(1, color.replace('0.85', '0.6').replace('0.9', '0.65').replace('0.7', '0.5'));
+
+    this.ctx.beginPath();
+    this.ctx.arc(center, center, currentRadius, 0, Math.PI * 2);
+    this.ctx.fillStyle = gradCircle;
+    this.ctx.shadowColor = color;
+    this.ctx.shadowBlur = 15;
+    this.ctx.fill();
+    this.ctx.shadowBlur = 0;
+
+    // Center text
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.font = 'bold 22px system-ui, -apple-system, sans-serif';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    if (this.isRunning && typeof text === 'number') {
+      this.ctx.fillText(`${text}s`, center, center);
+    } else {
+      this.ctx.font = '600 16px system-ui, -apple-system, sans-serif';
+      this.ctx.fillText(String(text), center, center);
+    }
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { BreathPacer };
+}
+
+/**
+ * MindMirror - Cognitive Distortion Catalog & CBT Thought De-Tangler
+ */
+
+const COGNITIVE_DISTORTIONS = [
+  {
+    id: 'catastrophizing',
+    name: 'Catastrophizing',
+    icon: '🌋',
+    desc: 'Assuming the absolute worst-case scenario will inevitably happen, blowing problems out of proportion.'
+  },
+  {
+    id: 'all_or_nothing',
+    name: 'All-or-Nothing Thinking',
+    icon: '⚖️',
+    desc: 'Viewing situations in black-and-white extremes. If something is not 100% perfect, you consider it a total failure.'
+  },
+  {
+    id: 'mind_reading',
+    name: 'Mind Reading',
+    icon: '🔮',
+    desc: 'Assuming you know what others are thinking about you (usually negative), without any verifiable factual evidence.'
+  },
+  {
+    id: 'emotional_reasoning',
+    name: 'Emotional Reasoning',
+    icon: '💔',
+    desc: 'Believing that because you feel a certain way, it must be the objective truth ("I feel worthless, therefore I am worthless").'
+  },
+  {
+    id: 'should_statements',
+    name: '"Should" & "Must" Statements',
+    icon: '📏',
+    desc: 'Torturing yourself with rigid rules ("I should never struggle," "I must always please everyone"), generating guilt and resentment.'
+  },
+  {
+    id: 'discounting_positive',
+    name: 'Discounting the Positive',
+    icon: '🧹',
+    desc: 'Rejecting good experiences, achievements, or compliments by insisting they "don\'t count" or were "just luck."'
+  },
+  {
+    id: 'overgeneralization',
+    name: 'Overgeneralization',
+    icon: '🔁',
+    desc: 'Taking a single negative event and viewing it as an endless, permanent pattern of defeat ("This always happens to me").'
+  }
+];
+
+const CBT_PRELOADED_EXAMPLES = [
+  {
+    title: 'Work / Performance Anxiety',
+    originalThought: 'I fumbled my words during the meeting. Everyone thinks I am an incompetent fraud and my boss will fire me.',
+    distortions: ['catastrophizing', 'mind_reading', 'all_or_nothing'],
+    evidenceAgainst: 'I delivered the project on time, my boss thanked me yesterday, and stumbling over a word is normal human speech.',
+    friendAdvice: 'I would tell my friend: nobody remembers your single stumble, they were listening to the content.',
+    reframedThought: 'I had one awkward moment, but a stumble does not erase my expertise or performance. Mistakes are human and I am doing good work.'
+  },
+  {
+    title: 'Social / Relationship Insecurity',
+    originalThought: 'My friend took 6 hours to reply to my text. They must be sick of me and our friendship is ending.',
+    distortions: ['mind_reading', 'catastrophizing', 'emotional_reasoning'],
+    evidenceAgainst: 'They have a demanding job and often go offline during busy days. We had a great phone call earlier this week.',
+    friendAdvice: 'People have their own busy lives. A delayed message has nothing to do with your worth or friendship.',
+    reframedThought: 'Their delay is almost certainly about their busy day, not about me. I choose not to fabricate catastrophic stories in the absence of evidence.'
+  },
+  {
+    title: 'Perfectionism & Procrastination',
+    originalThought: 'I missed my morning workout and ate dessert, so my whole healthy routine is ruined and I have zero self-discipline.',
+    distortions: ['all_or_nothing', 'overgeneralization'],
+    evidenceAgainst: 'I worked out 4 days this week and ate wholesome meals for lunch. One slip is a blip, not a lifestyle collapse.',
+    friendAdvice: 'Consistency is about averages over months, not perfection in 24 hours. Enjoy the dessert and get back on track tonight.',
+    reframedThought: 'One missed workout does not cancel my weeks of healthy habits. Progress is about resilience, not unbroken perfection.'
+  }
+];
+
+const CRISIS_RESOURCES = [
+  {
+    country: 'United States & Canada',
+    badge: '24/7 Free & Confidential',
+    name: 'Suicide & Crisis Lifeline',
+    contact: 'Call or Text 988',
+    url: 'https://988lifeline.org'
+  },
+  {
+    country: 'United Kingdom',
+    badge: '24/7 Free',
+    name: 'Samaritans & NHS Mental Health',
+    contact: 'Call 111 (NHS) or 116 123 (Samaritans)',
+    url: 'https://www.samaritans.org'
+  },
+  {
+    country: 'India',
+    badge: 'Government Helpline',
+    name: 'KIRAN National Mental Health Helpline / Vandrevala',
+    contact: 'Call 1800-599-0019 or +91 9999 666 555',
+    url: 'https://www.vandrevalafoundation.com'
+  },
+  {
+    country: 'Australia',
+    badge: '24/7 Crisis Support',
+    name: 'Lifeline Australia',
+    contact: 'Call 13 11 14',
+    url: 'https://www.lifeline.org.au'
+  },
+  {
+    country: 'International / Worldwide',
+    badge: 'Global Directory',
+    name: 'Befrienders Worldwide & Find A Helpline',
+    contact: 'Over 130 countries supported',
+    url: 'https://findahelpline.com'
+  }
+];
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    COGNITIVE_DISTORTIONS,
+    CBT_PRELOADED_EXAMPLES,
+    CRISIS_RESOURCES
+  };
+}
+
+/**
+ * MindMirror - Main UI Application Controller
+ */
+
+// Application State
+const state = {
+  theme: localStorage.getItem('mm_theme') || 'light',
+  currentView: 'home',
+  
+  // Assessment
+  assessmentMode: null, // 'problem', 'personality', 'full'
+  questionsList: [],
+  currentIndex: 0,
+  problemAnswers: {}, // { qId: score }
+  personalityAnswers: {}, // { qId: { trait, weight } }
+
+  // CBT State
+  selectedDistortions: new Set(),
+
+  // Breath Pacer Instance
+  breathPacer: null
+};
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initNavigation();
+  initAssessmentLaunchers();
+  initBreathGym();
+  initCbtTool();
+  initCrisisDirectory();
+  initKeyboardNavigation();
+});
+
+/* ========================================================
+   THEME TOGGLING
+   ======================================================== */
+function initTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  updateThemeButtonIcon();
+
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', state.theme);
+      localStorage.setItem('mm_theme', state.theme);
+      updateThemeButtonIcon();
+    });
+  }
+}
+
+function updateThemeButtonIcon() {
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+  if (toggleBtn) {
+    toggleBtn.textContent = state.theme === 'light' ? '🌙' : '☀️';
+    toggleBtn.setAttribute('title', `Switch to ${state.theme === 'light' ? 'Dark' : 'Light'} Mode`);
+  }
+}
+
+/* ========================================================
+   NAVIGATION & VIEW SWITCHING
+   ======================================================== */
+function switchView(viewName) {
+  state.currentView = viewName;
+  const views = document.querySelectorAll('.view-panel');
+  views.forEach(v => {
+    v.style.display = 'none';
+  });
+
+  const targetView = document.getElementById(`view-${viewName}`);
+  if (targetView) {
+    targetView.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Update nav links active state
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
+  });
+
+  // Stop breath pacer if navigating away from breath view
+  if (viewName !== 'breath' && state.breathPacer && state.breathPacer.isRunning) {
+    state.breathPacer.stop();
+  }
+}
+
+function initNavigation() {
+  document.querySelectorAll('[data-view]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const view = el.getAttribute('data-view');
+      if (view === 'screener') {
+        startAssessment('problem');
+      } else if (view === 'personality') {
+        startAssessment('personality');
+      } else {
+        switchView(view);
+      }
+    });
+  });
+
+  const navBrand = document.getElementById('nav-brand');
+  if (navBrand) {
+    navBrand.addEventListener('click', () => switchView('home'));
+  }
+
+  const crisisBannerLink = document.getElementById('link-crisis-banner');
+  if (crisisBannerLink) {
+    crisisBannerLink.addEventListener('click', () => switchView('crisis'));
+  }
+
+  const quickBreath = document.getElementById('quick-tool-breath');
+  if (quickBreath) {
+    quickBreath.addEventListener('click', () => switchView('breath'));
+  }
+
+  const quickCbt = document.getElementById('quick-tool-cbt');
+  if (quickCbt) {
+    quickCbt.addEventListener('click', () => switchView('cbt'));
+  }
+}
+
+/* ========================================================
+   ASSESSMENT LAUNCHERS & WIZARD
+   ======================================================== */
+function initAssessmentLaunchers() {
+  const btnProb = document.getElementById('btn-start-problem');
+  const btnPers = document.getElementById('btn-start-personality');
+  const btnFull = document.getElementById('btn-start-full');
+
+  if (btnProb) btnProb.addEventListener('click', () => startAssessment('problem'));
+  if (btnPers) btnPers.addEventListener('click', () => startAssessment('personality'));
+  if (btnFull) btnFull.addEventListener('click', () => startAssessment('full'));
+
+  // Wizard Navigation
+  const prevBtn = document.getElementById('wizard-prev-btn');
+  const nextBtn = document.getElementById('wizard-next-btn');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', handlePreviousQuestion);
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', handleNextQuestion);
+  }
+}
+
+function startAssessment(mode) {
+  state.assessmentMode = mode;
+  state.currentIndex = 0;
+  state.problemAnswers = {};
+  state.personalityAnswers = {};
+
+  if (mode === 'problem') {
+    state.questionsList = [...PROBLEM_QUESTIONS];
+  } else if (mode === 'personality') {
+    state.questionsList = [...PERSONALITY_QUESTIONS];
+  } else if (mode === 'full') {
+    state.questionsList = [...PROBLEM_QUESTIONS, ...PERSONALITY_QUESTIONS];
+  }
+
+  switchView('assessment');
+  renderCurrentQuestion();
+}
+
+function renderCurrentQuestion() {
+  const q = state.questionsList[state.currentIndex];
+  if (!q) return;
+
+  const total = state.questionsList.length;
+  const currentNum = state.currentIndex + 1;
+  const progressPercent = Math.round((currentNum / total) * 100);
+
+  // Update Badge & Header Progress
+  const badgeEl = document.getElementById('wizard-badge');
+  const stepLabel = document.getElementById('wizard-step-label');
+  const percentLabel = document.getElementById('wizard-percent-label');
+  const progressBar = document.getElementById('wizard-progress-bar');
+  const prevBtn = document.getElementById('wizard-prev-btn');
+  const nextBtn = document.getElementById('wizard-next-btn');
+
+  if (q.category) {
+    const cat = PROBLEM_CATEGORIES[q.category];
+    badgeEl.textContent = `${cat.icon} Emotional Screener: ${cat.name}`;
+  } else {
+    badgeEl.textContent = `🎭 Personality Archetype Compass (Trait Axis)`;
+  }
+
+  stepLabel.textContent = `Question ${currentNum} of ${total}`;
+  percentLabel.textContent = `${progressPercent}% Complete`;
+  progressBar.style.width = `${progressPercent}%`;
+
+  prevBtn.disabled = state.currentIndex === 0;
+
+  // Title and Subtext
+  document.getElementById('wizard-q-title').textContent = q.question;
+  document.getElementById('wizard-q-subtext').textContent = q.subtext || '';
+
+  // Render Options
+  const container = document.getElementById('wizard-options-container');
+  container.innerHTML = '';
+
+  const isPersonality = !q.category;
+  const currentSavedAns = isPersonality 
+    ? state.personalityAnswers[q.id] 
+    : state.problemAnswers[q.id];
+
+  nextBtn.disabled = currentSavedAns === undefined;
+  nextBtn.textContent = (currentNum === total) ? 'View My Full Insights ➔' : 'Next Question ➔';
+
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.setAttribute('type', 'button');
+
+    const keyLetter = ['A', 'B', 'C', 'D'][idx] || String(idx + 1);
+
+    // Check if this option is selected
+    let isSelected = false;
+    if (isPersonality) {
+      if (currentSavedAns && currentSavedAns.trait === opt.trait && currentSavedAns.weight === opt.weight) {
+        isSelected = true;
+      }
+    } else {
+      if (currentSavedAns !== undefined && currentSavedAns === opt.score) {
+        isSelected = true;
+      }
+    }
+
+    if (isSelected) {
+      btn.classList.add('selected');
+    }
+
+    btn.innerHTML = `
+      <div class="option-bullet">${keyLetter}</div>
+      <div class="option-text">${opt.text}</div>
+    `;
+
+    btn.addEventListener('click', () => {
+      // Clear selections
+      container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      // Save answer
+      if (isPersonality) {
+        state.personalityAnswers[q.id] = { trait: opt.trait, weight: opt.weight };
+      } else {
+        state.problemAnswers[q.id] = opt.score;
+      }
+
+      nextBtn.disabled = false;
+
+      // Smooth auto-advance after gentle delay for flow
+      setTimeout(() => {
+        handleNextQuestion();
+      }, 260);
+    });
+
+    container.appendChild(btn);
+  });
+}
+
+function handleNextQuestion() {
+  if (state.currentIndex < state.questionsList.length - 1) {
+    state.currentIndex++;
+    renderCurrentQuestion();
+  } else {
+    // Finished all questions!
+    showResults();
+  }
+}
+
+function handlePreviousQuestion() {
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    renderCurrentQuestion();
+  }
+}
+
+function initKeyboardNavigation() {
+  window.addEventListener('keydown', (e) => {
+    if (state.currentView !== 'assessment') return;
+    const key = e.key;
+    if (['1', '2', '3', '4'].includes(key)) {
+      const idx = parseInt(key, 10) - 1;
+      const options = document.querySelectorAll('#wizard-options-container .option-btn');
+      if (options[idx]) {
+        options[idx].click();
+      }
+    } else if (key === 'ArrowRight' || key === 'Enter') {
+      const nextBtn = document.getElementById('wizard-next-btn');
+      if (nextBtn && !nextBtn.disabled) {
+        nextBtn.click();
+      }
+    } else if (key === 'ArrowLeft') {
+      const prevBtn = document.getElementById('wizard-prev-btn');
+      if (prevBtn && !prevBtn.disabled) {
+        prevBtn.click();
+      }
+    }
+  });
+}
+
+/* ========================================================
+   RESULTS RENDERING & SYNTHESIS
+   ======================================================== */
+function showResults() {
+  switchView('results');
+
+  const container = document.getElementById('results-content-area');
+  container.innerHTML = '';
+
+  const hasProblem = Object.keys(state.problemAnswers).length > 0;
+  const hasPersonality = Object.keys(state.personalityAnswers).length > 0;
+
+  let problemData = hasProblem ? calculateProblemResults(state.problemAnswers) : null;
+  let personalityData = hasPersonality ? calculatePersonalityResults(state.personalityAnswers) : null;
+
+  // Header Banner
+  const headerBanner = document.createElement('div');
+  headerBanner.className = 'results-header-banner';
+  headerBanner.innerHTML = `
+    <div class="results-header-text">
+      <h2>Your Psychological Insights & Coping Blueprint</h2>
+      <p>Here is your compassionate clinical synthesis, personalized root-cause breakdown, and tailored coping strategies.</p>
+    </div>
+    <div class="results-actions-top">
+      <button class="btn btn-secondary btn-sm" id="btn-print-results">
+        🖨️ Print / Save PDF
+      </button>
+      <button class="btn btn-primary btn-sm" id="btn-retake-results">
+        ↺ Retake Assessment
+      </button>
+    </div>
+  `;
+  container.appendChild(headerBanner);
+
+  // Wire up Print & Retake buttons
+  setTimeout(() => {
+    const printBtn = document.getElementById('btn-print-results');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+    const retakeBtn = document.getElementById('btn-retake-results');
+    if (retakeBtn) retakeBtn.addEventListener('click', () => switchView('home'));
+  }, 50);
+
+  // If Problem data exists, show Overall Emotional Strain and Dimension breakdown
+  if (problemData) {
+    renderProblemOverview(container, problemData);
+    renderDimensionBars(container, problemData);
+    renderBlueprint(container, problemData);
+  }
+
+  // If Personality data exists, show Archetype card
+  if (personalityData) {
+    renderArchetypeCard(container, personalityData);
+  }
+
+  // Cross-Synthesis if both exist
+  if (problemData && personalityData) {
+    renderCrossSynthesisCard(container, problemData, personalityData);
+  }
+
+  // Built-in Practice Recommendations Footer
+  renderActionFooter(container);
+}
+
+function renderProblemOverview(container, data) {
+  const grid = document.createElement('div');
+  grid.className = 'overview-cards-grid';
+
+  grid.innerHTML = `
+    <!-- Overall Strain -->
+    <div class="stat-card">
+      <div class="stat-card-label">Overall Emotional Strain</div>
+      <div class="stat-card-value">
+        ${data.overallPercentage}%
+        <span class="severity-pill ${data.severityClass}">${data.severity}</span>
+      </div>
+      <p class="stat-card-desc">${data.severityDescription}</p>
+    </div>
+
+    <!-- Primary Concern -->
+    <div class="stat-card" style="border-top: 3px solid ${data.primaryMeta.color};">
+      <div class="stat-card-label">Primary Challenge</div>
+      <div class="stat-card-value" style="font-size: 1.35rem;">
+        <span>${data.primaryMeta.icon}</span> ${data.primaryMeta.name}
+      </div>
+      <p class="stat-card-desc">${data.primaryMeta.description}</p>
+    </div>
+
+    <!-- Secondary Factor -->
+    <div class="stat-card" style="border-top: 3px solid ${data.secondaryMeta.color};">
+      <div class="stat-card-label">Contributing Secondary Factor</div>
+      <div class="stat-card-value" style="font-size: 1.35rem;">
+        <span>${data.secondaryMeta.icon}</span> ${data.secondaryMeta.name}
+      </div>
+      <p class="stat-card-desc">${data.secondaryMeta.description}</p>
+    </div>
+  `;
+
+  container.appendChild(grid);
+}
+
+function renderDimensionBars(container, data) {
+  const sec = document.createElement('div');
+  sec.className = 'dimensions-section';
+
+  let barsHtml = '';
+  data.sortedCategories.forEach(catKey => {
+    const meta = PROBLEM_CATEGORIES[catKey];
+    const pct = data.percentages[catKey];
+
+    barsHtml += `
+      <div class="dimension-row">
+        <div class="dimension-info">
+          <div class="dimension-name">
+            <span>${meta.icon}</span>
+            <span>${meta.name}</span>
+          </div>
+          <div class="dimension-percentage">${pct}% Intensity</div>
+        </div>
+        <div class="dimension-bar-track">
+          <div class="dimension-bar-value" style="width: ${pct}%; background: ${meta.color};"></div>
+        </div>
+      </div>
+    `;
+  });
+
+  sec.innerHTML = `
+    <h3 class="section-title">📊 Emotional Landscape Breakdown</h3>
+    <p class="section-subtitle">Relative intensity across the 7 evaluated psychological wellness dimensions:</p>
+    <div class="dimension-bars-list">
+      ${barsHtml}
+    </div>
+  `;
+
+  container.appendChild(sec);
+}
+
+function renderBlueprint(container, data) {
+  const bp = data.blueprint;
+  const meta = data.primaryMeta;
+
+  const card = document.createElement('div');
+  card.className = 'blueprint-card';
+
+  let habitsHtml = '';
+  bp.weeklyHabits.forEach(h => {
+    habitsHtml += `
+      <div class="habit-card">
+        <strong>${h.title}</strong>
+        <div>${h.detail}</div>
+      </div>
+    `;
+  });
+
+  let rescueStepsHtml = '';
+  bp.immediateRescue.steps.forEach(s => {
+    rescueStepsHtml += `<li>${s}</li>`;
+  });
+
+  card.innerHTML = `
+    <div class="blueprint-header">
+      <div class="blueprint-avatar">${meta.icon}</div>
+      <div class="blueprint-header-text">
+        <h3>Actionable Coping Blueprint: ${bp.title}</h3>
+        <p>${bp.subTitle}</p>
+      </div>
+    </div>
+
+    <!-- Neurobiology Explainer -->
+    <div class="neurology-box">
+      <strong>🧠 What Is Happening In Your Nervous System:</strong>
+      ${bp.neurology}
+    </div>
+
+    <!-- 3-Tier Blueprint -->
+    <h4 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">
+      🛠️ Your 3-Tier Step-by-Step Fix:
+    </h4>
+
+    <div class="solution-tiers">
+      <!-- Tier 1 -->
+      <div class="tier-item tier-1">
+        <div class="tier-header">
+          <span class="tier-tag">Tier 1: Immediate Triage (0 – 5 Mins)</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">${bp.immediateRescue.duration}</span>
+        </div>
+        <div class="tier-title">${bp.immediateRescue.name}</div>
+        <ol class="tier-steps">
+          ${rescueStepsHtml}
+        </ol>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="tier-item tier-2">
+        <div class="tier-header">
+          <span class="tier-tag">Tier 2: Daily Rebalancing Micro-Habits</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Next 7 Days</span>
+        </div>
+        <div class="tier-title">3 Concrete Daily Keystone Habits</div>
+        <div class="habit-list">
+          ${habitsHtml}
+        </div>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="tier-item tier-3">
+        <div class="tier-header">
+          <span class="tier-tag">Tier 3: Cognitive & Mindset Reframe</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">CBT Thought Restructuring</span>
+        </div>
+        <div class="tier-title">Transforming Automatic Thoughts</div>
+        <div class="cbt-preview-box">
+          <div class="cbt-row">
+            <span class="cbt-label">Distorted Thought:</span>
+            <div class="cbt-val">${bp.cbtReframe.thought}</div>
+          </div>
+          <div class="cbt-row">
+            <span class="cbt-label">Cognitive Trap:</span>
+            <div style="color: var(--accent-rose); font-weight: 600;">${bp.cbtReframe.distortion}</div>
+          </div>
+          <div class="cbt-row" style="margin-bottom: 0;">
+            <span class="cbt-label">Balanced Healing Reframe:</span>
+            <div style="color: var(--accent-emerald); font-weight: 600; line-height: 1.5;">${bp.cbtReframe.reframe}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Self-Compassion Mantra -->
+    <div class="mantra-banner">
+      <div class="mantra-title">🌱 Your Compassionate Anchor Mantra</div>
+      <div class="mantra-quote">"${bp.mantra}"</div>
+    </div>
+
+    <!-- Clinical Advisory -->
+    <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      <strong>Professional Recommendation:</strong> ${bp.proAdvice}
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
+function renderArchetypeCard(container, data) {
+  const arc = data.archetype;
+
+  const card = document.createElement('div');
+  card.className = 'archetype-showcase-card';
+
+  let strengthsHtml = '';
+  arc.strengths.forEach(s => strengthsHtml += `<li>${s}</li>`);
+
+  let shadowsHtml = '';
+  arc.shadows.forEach(s => shadowsHtml += `<li>${s}</li>`);
+
+  card.innerHTML = `
+    <div class="archetype-banner">
+      <div class="archetype-big-icon">${arc.archetypeIcon}</div>
+      <div class="archetype-titles">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">
+          Your Personality Archetype
+        </div>
+        <h3>${arc.name}</h3>
+        <div class="archetype-tagline">${arc.tagline}</div>
+      </div>
+    </div>
+
+    <p class="archetype-summary">${arc.summary}</p>
+
+    <!-- Dominant Axes -->
+    <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.75rem;">
+      <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Your Core Cognitive Traits Breakdown
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; font-size: 0.9rem;">
+        <div><strong>Energy Recharge:</strong> ${data.dominantAxes.energy}</div>
+        <div><strong>Information Lens:</strong> ${data.dominantAxes.lens}</div>
+        <div><strong>Decision Style:</strong> ${data.dominantAxes.decisions}</div>
+        <div><strong>Lifestyle Rhythm:</strong> ${data.dominantAxes.lifestyle}</div>
+      </div>
+    </div>
+
+    <!-- Strengths & Shadows Grid -->
+    <div class="archetype-grid">
+      <div class="trait-box">
+        <h4 style="color: var(--accent-emerald);">✨ Core Superpowers</h4>
+        <ul class="trait-list">
+          ${strengthsHtml}
+        </ul>
+      </div>
+
+      <div class="trait-box">
+        <h4 style="color: var(--accent-amber);">⚠️ Blind Spots & Shadow Edges</h4>
+        <ul class="trait-list">
+          ${shadowsHtml}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Stress & Recharge -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+      <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); border-left: 3px solid var(--accent-rose);">
+        <strong style="color: var(--accent-rose); display: block; margin-bottom: 0.35rem;">🔥 How You React Under Stress:</strong>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">${arc.stressReaction}</p>
+      </div>
+      <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); border-left: 3px solid var(--accent-teal);">
+        <strong style="color: var(--accent-teal); display: block; margin-bottom: 0.35rem;">🔋 Optimal Mental Recharge Style:</strong>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">${arc.optimalRecharge}</p>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
+function renderCrossSynthesisCard(container, probData, persData) {
+  const card = document.createElement('div');
+  card.className = 'cross-synthesis-card';
+
+  const synthesisText = generateCrossSynthesis(probData.primaryCategory, persData.matchedKey);
+
+  card.innerHTML = `
+    <h3>✨ Dynamic Cross-Synthesis: Your Personality Meets Your Current Struggle</h3>
+    <p>
+      <strong>How ${persData.archetype.name} specifically experiences ${probData.primaryMeta.name}:</strong><br>
+      ${synthesisText}
+    </p>
+  `;
+
+  container.appendChild(card);
+}
+
+function renderActionFooter(container) {
+  const footer = document.createElement('div');
+  footer.style.textAlign = 'center';
+  footer.style.marginTop = '2.5rem';
+  footer.innerHTML = `
+    <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem;">Put Your Healing Into Motion Right Now</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Use our built-in mindfulness and cognitive exercises immediately:</p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <button class="btn btn-primary" id="btn-results-open-breath">
+        🫁 Practice Recommended Breathing
+      </button>
+      <button class="btn btn-secondary" id="btn-results-open-cbt">
+        📝 Deconstruct a Negative Thought (CBT)
+      </button>
+      <button class="btn btn-secondary" id="btn-results-home">
+        🏠 Back to Home Hub
+      </button>
+    </div>
+  `;
+
+  container.appendChild(footer);
+
+  setTimeout(() => {
+    document.getElementById('btn-results-open-breath')?.addEventListener('click', () => switchView('breath'));
+    document.getElementById('btn-results-open-cbt')?.addEventListener('click', () => switchView('cbt'));
+    document.getElementById('btn-results-home')?.addEventListener('click', () => switchView('home'));
+  }, 50);
+}
+
+/* ========================================================
+   BREATHWORK GYM CONTROLLER
+   ======================================================== */
+function initBreathGym() {
+  state.breathPacer = new BreathPacer('breath-canvas', 'pacer-instruction', 'pacer-timer', 'pacer-cycles');
+
+  // Mode Tabs
+  const modeTabs = document.querySelectorAll('[data-breath-mode]');
+  modeTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      modeTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const mode = tab.getAttribute('data-breath-mode');
+      state.breathPacer.setMode(mode);
+    });
+  });
+
+  // Start / Pause Toggle
+  const toggleBtn = document.getElementById('btn-pacer-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      if (state.breathPacer.isRunning) {
+        state.breathPacer.stop();
+        toggleBtn.textContent = '▶ Resume Breathing';
+        toggleBtn.classList.remove('btn-secondary');
+        toggleBtn.classList.add('btn-primary');
+      } else {
+        state.breathPacer.start();
+        toggleBtn.textContent = '⏸ Pause Session';
+        toggleBtn.classList.remove('btn-primary');
+        toggleBtn.classList.add('btn-secondary');
+      }
+    });
+  }
+
+  // Reset
+  const resetBtn = document.getElementById('btn-pacer-reset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      state.breathPacer.reset();
+      if (toggleBtn) {
+        toggleBtn.textContent = '▶ Begin Breathing';
+        toggleBtn.classList.remove('btn-secondary');
+        toggleBtn.classList.add('btn-primary');
+      }
+    });
+  }
+
+  // Sound Toggle
+  const soundBtn = document.getElementById('btn-pacer-sound');
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      const isSoundOn = state.breathPacer.toggleSound();
+      soundBtn.textContent = isSoundOn ? '🔔 Sound: On' : '🔕 Sound: Off';
+    });
+  }
+}
+
+/* ========================================================
+   CBT THOUGHT DETANGLER CONTROLLER
+   ======================================================== */
+function initCbtTool() {
+  // Render Distortion Chips
+  const container = document.getElementById('cbt-distortions-container');
+  if (container) {
+    container.innerHTML = '';
+    COGNITIVE_DISTORTIONS.forEach(d => {
+      const chip = document.createElement('button');
+      chip.className = 'chip-btn';
+      chip.setAttribute('type', 'button');
+      chip.setAttribute('data-distortion-id', d.id);
+      chip.innerHTML = `
+        <strong>${d.icon} ${d.name}</strong>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${d.desc}</div>
+      `;
+
+      chip.addEventListener('click', () => {
+        if (state.selectedDistortions.has(d.id)) {
+          state.selectedDistortions.delete(d.id);
+          chip.classList.remove('selected');
+        } else {
+          state.selectedDistortions.add(d.id);
+          chip.classList.add('selected');
+        }
+      });
+
+      container.appendChild(chip);
+    });
+  }
+
+  // Preloaded Example Pills
+  const examplePillsContainer = document.getElementById('cbt-examples-pills');
+  if (examplePillsContainer) {
+    examplePillsContainer.innerHTML = '';
+    CBT_PRELOADED_EXAMPLES.forEach(ex => {
+      const pill = document.createElement('button');
+      pill.className = 'btn btn-secondary btn-sm';
+      pill.textContent = ex.title;
+      pill.addEventListener('click', () => loadCbtExample(ex));
+      examplePillsContainer.appendChild(pill);
+    });
+  }
+
+  // Generate Reframe Button
+  const genBtn = document.getElementById('btn-generate-reframe');
+  if (genBtn) {
+    genBtn.addEventListener('click', generateCbtReframe);
+  }
+
+  // Copy Reframe
+  const copyBtn = document.getElementById('btn-copy-reframe');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const text = document.getElementById('cbt-reframed-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = '✓ Copied to Clipboard!';
+        setTimeout(() => copyBtn.textContent = '📋 Copy Reframe', 2000);
+      });
+    });
+  }
+
+  // Clear CBT
+  const clearBtn = document.getElementById('btn-clear-cbt');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', clearCbtForm);
+  }
+}
+
+function loadCbtExample(ex) {
+  document.getElementById('cbt-input-thought').value = ex.originalThought;
+  document.getElementById('cbt-input-evidence').value = ex.evidenceAgainst;
+  document.getElementById('cbt-input-friend').value = ex.friendAdvice;
+
+  // Clear and select matching chips
+  state.selectedDistortions.clear();
+  document.querySelectorAll('#cbt-distortions-container .chip-btn').forEach(btn => {
+    const id = btn.getAttribute('data-distortion-id');
+    if (ex.distortions.includes(id)) {
+      state.selectedDistortions.add(id);
+      btn.classList.add('selected');
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+
+  // Display the output
+  document.getElementById('cbt-reframed-text').textContent = ex.reframedThought;
+  document.getElementById('cbt-output-box').style.display = 'block';
+}
+
+function generateCbtReframe() {
+  const thought = document.getElementById('cbt-input-thought').value.trim();
+  const evidence = document.getElementById('cbt-input-evidence').value.trim();
+  const friend = document.getElementById('cbt-input-friend').value.trim();
+
+  if (!thought) {
+    alert('Please enter the negative thought you would like to deconstruct.');
+    return;
+  }
+
+  // Distortions summary text
+  let distortionNames = [];
+  COGNITIVE_DISTORTIONS.forEach(d => {
+    if (state.selectedDistortions.has(d.id)) {
+      distortionNames.push(d.name);
+    }
+  });
+
+  const distText = distortionNames.length > 0 
+    ? `I recognize my mind was trapped in ${distortionNames.join(' and ')}.` 
+    : `I recognize this thought is an emotional reaction rather than an objective fact.`;
+
+  const evText = evidence ? `The verifiable reality is that: ${evidence}.` : '';
+  const frText = friend ? `Remember: ${friend}.` : '';
+
+  const synthesized = `"${distText} While I initially felt: '${thought}', ${evText} ${frText} I choose to release extreme catastrophizing and focus on what is within my constructive control right now."`;
+
+  document.getElementById('cbt-reframed-text').textContent = synthesized;
+  const box = document.getElementById('cbt-output-box');
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function clearCbtForm() {
+  document.getElementById('cbt-input-thought').value = '';
+  document.getElementById('cbt-input-evidence').value = '';
+  document.getElementById('cbt-input-friend').value = '';
+  state.selectedDistortions.clear();
+  document.querySelectorAll('#cbt-distortions-container .chip-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  document.getElementById('cbt-output-box').style.display = 'none';
+}
+
+/* ========================================================
+   CRISIS DIRECTORY
+   ======================================================== */
+function initCrisisDirectory() {
+  const container = document.getElementById('crisis-list-container');
+  if (!container) return;
+
+  container.innerHTML = '';
+  CRISIS_RESOURCES.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'crisis-card';
+    card.innerHTML = `
+      <div>
+        <span class="crisis-badge">${r.badge}</span>
+        <div class="crisis-country">${r.country}</div>
+        <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary);">${r.name}</div>
+        <div class="crisis-contact">${r.contact}</div>
+      </div>
+      <div>
+        <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="width: 100%; text-decoration: none;">
+          Official Helpline Website ↗
+        </a>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+</script>
+
+</body>
+</html>
